@@ -1,2 +1,10 @@
 // Main style for the website
+//
+//  1.  Override any css properties for bootstrap (theme) or vendor variables
+@import "bootstrap_vars";
 
+//  2.  Load bootstraps source files and any other vendors
+@import "../../node_modules/bootstrap/scss/bootstrap";
+
+//  3.  Load our website files
+@import "theme";

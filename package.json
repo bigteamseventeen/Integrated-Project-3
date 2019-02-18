@@ -15,12 +15,24 @@
   "dependencies": {
     "bootstrap": "^4.3.1",
     "cross-env": "^5.2.0",
+    "jquery": "latest",
     "laravel-mix": "^4.0.14",
-    "node-sass": "^4.11.0"
+    "lodash": "latest",
+    "node-sass": "^4.11.0",
+    "pug": "^2.0.3",
+    "resolve-url-loader": "^2.3.1",
+    "sass": "^1.17.0",
+    "sass-loader": "^7.1.0",
+    "ts-loader": "^5.3.3",
+    "typescript": "^3.3.3",
+    "vue": "^2.6.6",
+    "vue-class-component": "^6.3.2",
+    "vue-property-decorator": "^6.1.0",
+    "vue-router": "^3.0.2",
+    "vue-template-compiler": "^2.6.6"
   },
   "devDependencies": {
-    "resolve-url-loader": "^2.3.1",
-    "sass-loader": "^7.1.0",
-    "vue-template-compiler": "^2.6.6"
+    "@types/bootstrap": "^4.2.2",
+    "@types/lodash": "^4.14.121"
   }
 }
