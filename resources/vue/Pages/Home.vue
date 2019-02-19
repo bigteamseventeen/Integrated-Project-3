@@ -1,11 +1,11 @@
 <template>
 	<section class="jumbotron text-center jumbotron-header">
 		<div class="container">
-			<h1 class="jumbotron-heading">Album example</h1>
-			<p class="lead text-muted">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don’t simply skip over it entirely.</p>
+			<h1 class="jumbotron-heading">Banner page example</h1>
+			<p class="lead text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis feugiat, nunc aliquet dapibus ornare, diam urna venenatis tellus, quis congue libero dui vitae mauris. Sed malesuada libero interdum felis dignissim.</p>
 			<p>
-				<a href="#" class="btn btn-primary my-2">Main call to action</a>
-				<a href="#" class="btn btn-secondary my-2">Secondary action</a>
+				<router-link to="/pricing" class="btn btn-primary my-2">Product Pricing</router-link>
+				<a href="#" class="btn btn-secondary my-2">View Terms and Conditions</a>
 			</p>
 		</div>
 	</section>

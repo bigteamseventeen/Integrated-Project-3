@@ -4,7 +4,8 @@
 @import "bootstrap_vars";
 
 //  2.  Load bootstraps source files and any other vendors
-@import "../../node_modules/bootstrap/scss/bootstrap";
+@import "~bootstrap/scss/bootstrap";
+@import "~simplebar/dist/simplebar.css";
 
 //  3.  Load our website files
 @import "theme";

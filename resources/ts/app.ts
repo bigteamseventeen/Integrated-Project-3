@@ -3,6 +3,8 @@
 //
 
 // Import libraries
+import PerfectScrollbar from "perfect-scrollbar";
+
 console.info("Importing libraries...");
 
 import Vue from 'vue';
@@ -26,3 +28,5 @@ window.App.Vue = new Vue({
 	el: '#app',
 	router: Router
 });
+
+let scrollbar = new PerfectScrollbar('#app');
