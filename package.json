@@ -30,10 +30,12 @@
     "vue-class-component": "^6.3.2",
     "vue-property-decorator": "^6.1.0",
     "vue-router": "^3.0.2",
-    "vue-template-compiler": "^2.6.6"
+    "vue-template-compiler": "^2.6.6",
+    "vue-googlemaps": "^0.1.2"
   },
   "devDependencies": {
     "@types/bootstrap": "^4.2.2",
-    "@types/lodash": "^4.14.121"
+    "@types/lodash": "^4.14.121",
+    "@types/googlemaps": "^3.30.16"
   }
 }

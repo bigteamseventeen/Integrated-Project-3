@@ -15,7 +15,7 @@
 
 		//
 		// ---------- Methods and Computed ----------
-		constructor() { super(); }
+		constructor() { super(); } // Initialize data here if you cant above
 		mounted() { } // On Component Load, use instead of constructor!
 		beforeUpdated() { } // Before Render
 	}
