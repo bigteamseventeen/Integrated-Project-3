@@ -6,8 +6,9 @@
 image: node:8.12.0
 
 pipelines:
-  default:
-    - step:
-        script:
-          - npm install
-          - npm run production
+  branches:
+      master:
+        - step:
+            script:
+              - npm install
+              - npm run production
