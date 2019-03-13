@@ -16,6 +16,7 @@
   "dependencies": {
     "bootstrap": "^4.3.1",
     "cross-env": "^5.2.0",
+    "gmaps-marker-clusterer": "^1.2.2",
     "jquery": "latest",
     "laravel-mix": "^4.0.14",
     "lodash": "latest",
@@ -31,7 +32,7 @@
     "vue-property-decorator": "^6.1.0",
     "vue-router": "^3.0.2",
     "vue-template-compiler": "^2.6.6",
-    "vue-googlemaps": "^0.1.2"
+    "vue2-google-maps": "^0.10.6"
   },
   "devDependencies": {
     "@types/bootstrap": "^4.2.2",

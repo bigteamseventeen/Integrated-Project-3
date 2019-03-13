@@ -7,7 +7,7 @@
 				<router-link to="/pricing" class="btn btn-primary my-2">Product Pricing</router-link>
 				<a href="#" class="btn btn-secondary my-2">View Terms and Conditions</a>
 			</p>
-		</div>
+		</div> 
 	</section>
 </template>
 
@@ -18,7 +18,7 @@
 	export default class extends Vue {
 		//
 		// ---------- Properties ----------
-
+		
 		//
 		// ---------- Data ----------
 

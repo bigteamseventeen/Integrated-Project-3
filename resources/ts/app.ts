@@ -9,7 +9,6 @@ import Vue from 'vue';
 import * as $ from 'jquery';
 import * as _ from 'lodash';
 import "bootstrap";
-import 'vue-googlemaps/dist/vue-googlemaps.css';
 
 import {GlobalApplication} from "./Lib/GlobalApplication";
 

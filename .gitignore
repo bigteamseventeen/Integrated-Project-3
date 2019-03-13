@@ -3,6 +3,7 @@
 
 mix-manifest.json
 package-lock.json
+temp/
 
 ######################################################
 ############# Node Specific Settings
