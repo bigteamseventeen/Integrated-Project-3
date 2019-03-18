@@ -1,37 +1,54 @@
 <template>
 	<div class="container">
-		<h1>Earth Quakes - Test</h1>
+		
+		<div class="row">
+			<div class="col-md-8"> 
+				<h3>Earth Quakes - Test</h3>
 
-		<div>
-			<label>
-				<gmap-autocomplete @place_changed="setPlace"></gmap-autocomplete>
-				<button class="btn btn-primary" @click="addMarker">Add</button>
-			</label>
-     		<br/>
-    	</div>
 
-		<div class="container-map">
-			<!-- Map -->
-			<GmapMap :center="center" :zoom="zoom" style="width:100%;  height: 400px;">
-				<gmap-info-window :options="infoWindow.Options" :position="infoWindow.Position" 
-								  :opened="infoWindow.Opened" @closeclick="infoWindow.Opened=false">
-        			{{infoWindow.Content}}
-      			</gmap-info-window>
+				<div class="container-map">
+					<!-- Map -->
+					<GmapMap :center="center" :zoom="zoom" style="width:100%;height:100%;">
+						<gmap-info-window :options="infoWindow.Options" :position="infoWindow.Position" 
+										:opened="infoWindow.Opened" @closeclick="infoWindow.Opened=false">
+							{{infoWindow.Content}}
+						</gmap-info-window>
 
-				<GmapCluster>
-					<GmapMarker :key="index" v-for="(m, index) in markers"
-								:label="m.label"
-								:position="m.position"
-								:clickable="true" @click="center=m.position;markerClick(index, m)"
-					></GmapMarker>
-				</GmapCluster>
-			</GmapMap>
+						<GmapCluster>
+							<GmapMarker :key="index" v-for="(m, index) in markers"
+										:label="m.label"
+										:position="m.position"
+										:clickable="true" @click="center=m.position;markerClick(index, m)"
+							></GmapMarker>
+						</GmapCluster>
+					</GmapMap>
+				</div>
+
+				<div>
+					<label>
+						<gmap-autocomplete @place_changed="setPlace"></gmap-autocomplete>
+						<button class="btn btn-primary" @click="addMarker">Add</button>
+					</label>
+					<br/>
+				</div>		
+			</div>
+			<div class="col-md-4">
+				<h3>Recent Earthquakes</h3>
+
+				<button class="btn btn-primary" @click="updateRecentEarthquakes">Refresh recent earthquakes</button> <br> <br>
+
+				<div class="list-group">
+					<map-earthquake-item v-for="(item,index) in recentEarthquakes" :key="index" :Data="item"></map-earthquake-item>
+				</div> 
+			</div>
 		</div>
 	</div>
 </template>
 
 <script lang="ts">
-	import {Component, Vue} from 'vue-property-decorator';
+	import {Component, Vue, Watch} from 'vue-property-decorator';
+	import {GetEarthQuakes, EQDateSpan, EQSignificance} from '../../ts/API/EarthQuakes';
+	import {Feature, FeatureCollection} from 'geojson';
 
 	@Component({})
 	export default class extends Vue {
@@ -45,6 +62,7 @@
       	markers = [];
       	places = [];
 		currentPlace = null;
+		recentEarthquakes: Feature[] = [];
 
 		infoWindow: Object = {
 			Position: null,
@@ -61,10 +79,13 @@
 
 		//
 		// ---------- Methods and Computed ----------
-		constructor() { super(); } // Initialize data here if you cant above
+		constructor() { 
+			super();
+		 } // Initialize data here if you cant above
 
 		mounted() { 
 			this.geolocate();
+			this.updateRecentEarthquakes();
 		} // On Component Load, use instead of constructor!
 
 		beforeUpdated() { } // Before Render
@@ -89,7 +110,6 @@
 		}
 
 		markerClick(index, marker) {
-			alert("CLICK!");
 			console.log(index, marker);
 		}
 
@@ -101,12 +121,35 @@
 				};
 			});
 		}
+
+		updateRecentEarthquakes() {
+			let $this = this;
+
+			GetEarthQuakes(EQDateSpan.Hour, EQSignificance.M1_0_PLUS, function(response,status) {
+				if (status != "success") {
+					console.warn("Failed to recieve information from geological API");
+					return;
+				}
+
+				$this.recentEarthquakes = response.features;
+			});
+		}
+		
+		@Watch('$route')
+		onRouteVisit (to, from) {
+			if (to != "map") return;
+
+			// Any specific code for the current page when ever changed to
+
+			this.updateRecentEarthquakes();
+		}
 	};
 </script>
 
 <style scoped>
 	.container-map {
-		height: 400px;
+		min-height: 400px;
+		max-height: 70vh;
 		display: flex;
 		flex-direction: column;
 	}

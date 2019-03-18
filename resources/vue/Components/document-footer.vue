@@ -43,7 +43,7 @@
 	import { Component, Emit, Inject, Model, Prop, Provide, Vue, Watch } from 'vue-property-decorator';
 
 	@Component({})
-	export default class DocumentFooter extends Vue {
+	export default class extends Vue {
 		//
 		// ---------- Properties ----------
 

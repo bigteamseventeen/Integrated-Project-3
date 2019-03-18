@@ -6,15 +6,19 @@ import Vue from "vue";
 import Router from "vue-router";
 import * as VueGoogleMaps from "vue2-google-maps";
 import GmapCluster from 'vue2-google-maps/dist/components/cluster';
+import VueTimeago from 'vue-timeago'
 
 //
 // Components
-import DocumentNavbar from "../vue/Components/document-navbar.vue";
-import DocumentFooter from "../vue/Components/document-footer.vue";
+import DocumentNavbar from "../vue/Components/document-navbar.vue"; // <document-navbar></document-navbar>
+import DocumentFooter from "../vue/Components/document-footer.vue"; // <document-footer></document-footer> 
+import MapEarthquakeItem from "../vue/Components/map-earthquake-item.vue"; // <map-earthquake-item></map-earthquake-item> 
 
 // tslint:disable-next-line: 
 Vue.component('document-navbar', DocumentNavbar);
 Vue.component('document-footer', DocumentFooter);
+Vue.component('map-earthquake-item', MapEarthquakeItem);
+
 
 //
 // Pages
@@ -31,6 +35,11 @@ Vue.use(VueGoogleMaps, {
 		key: GMAPS_API_KEY,
 		libraries: ['places'], // Gmap libraries
 	},
+});
+
+Vue.use(VueTimeago, {
+	name: 'Timeago', // Component name, `Timeago` by default
+	locale: 'en', 	 // Default locale
 });
 
 Vue.component('GmapCluster', GmapCluster)
