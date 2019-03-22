@@ -53,7 +53,7 @@ const router = new Router({
 		{ path: '/', name: 'home', component: Home, meta: {title: "Home" } },
 		{ path: '/map', name: 'map', component: Map, meta: {title: "Maps" } },
 		{ path: '/pricing', name: 'pricing', component: Pricing, meta: { title: "Pricing" } },
-		{ path: '/testing', name: 'test', component: TestPage, meta: { title: "Tests" } }
+		{ path: '/pollution', name: 'pollution', component: TestPage, meta: { title: "Pollution levels" } }
 	],
 
 	linkActiveClass: "active",
