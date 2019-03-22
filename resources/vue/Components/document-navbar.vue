@@ -7,7 +7,7 @@
 				<router-link to="/map" class="p-2 text-dark">Map</router-link>
 				<router-link to="/pricing" class="p-2 text-dark">Pricing</router-link>
 				<router-link to="/testing" class="p-2 text-dark">Tests</router-link>
-				<router-link to="/air_quality" class="p-2 text-dark">Air Quality</router-link>
+				<router-link to="/pollution" class="p-2 text-dark">Air Quality</router-link>
 		</nav>
 	</div>
 </template>
