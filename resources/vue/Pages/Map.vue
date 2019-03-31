@@ -3,14 +3,14 @@
 		
 		<div class="row">
 			<div class="col-md-8"> 
-				<h3>Earth Quakes - Test</h3>
+				<h3>Map of Earthquakes</h3>
 
 
 				<div class="container-map">
 					<!-- Map -->
 					<GmapMap :center="center" :zoom="zoom" style="width:100%;height:100%;">
 						<gmap-info-window :options="infoWindow.Options" :position="infoWindow.Position" 
-										:opened="infoWindow.Opened" @closeclick="infoWindow.Opened=false">
+										  :opened="infoWindow.Opened"   @closeclick="infoWindow.Opened=false">
 							{{infoWindow.Content}}
 						</gmap-info-window>
 
@@ -34,11 +34,10 @@
 			</div>
 			<div class="col-md-4">
 				<h3>Recent Earthquakes</h3>
-
-				<button class="btn btn-primary" @click="updateRecentEarthquakes">Refresh recent earthquakes</button> <br> <br>
-
-				<div class="list-group">
-					<map-earthquake-item v-for="(item,index) in recentEarthquakes" :key="index" :Data="item"></map-earthquake-item>
+				
+				<div class="list-group quake-list">
+					<map-earthquake-item v-for="(item,index) in recentEarthquakes"
+						:key="index" :eq="item" :map="self"></map-earthquake-item>
 				</div> 
 			</div>
 		</div>
@@ -50,8 +49,21 @@
 	import {GetEarthQuakes, EQDateSpan, EQSignificance} from '../../ts/API/EarthQuakes';
 	import {Feature, FeatureCollection} from 'geojson';
 
+	class InfomationWindow {
+		Position: {lat: number, lng: number} = null;
+		Content: string;
+		Opened: boolean = false;
+		CurrentKey: any = null;
+		Options: {
+			pixelOffset: {
+				width: number,
+				height: number
+			},
+		} = { pixelOffset: {width: 0, height: -35} };
+	};
+
 	@Component({})
-	export default class extends Vue {
+	export default class Map extends Vue {
 		//
 		// ---------- Properties ----------
 
@@ -63,8 +75,9 @@
       	places = [];
 		currentPlace = null;
 		recentEarthquakes: Feature[] = [];
+		self: Map;
 
-		infoWindow: Object = {
+		infoWindow: InfomationWindow = {
 			Position: null,
 			Content: null,
 			Opened: false,
@@ -81,11 +94,34 @@
 		// ---------- Methods and Computed ----------
 		constructor() { 
 			super();
+
+			this.self = this;
+			console.log("Constructor");
+			this.updateRecentEarthquakes();
 		 } // Initialize data here if you cant above
 
-		mounted() { 
+		async mounted() { 
 			this.geolocate();
-			this.updateRecentEarthquakes();
+
+
+			let $this = this;
+			GetEarthQuakes(EQDateSpan.Week, EQSignificance.ALL, async function(response,status) {
+				if (status != "success") {
+					console.warn("Failed to recieve information from geological API");
+					return;
+				}
+
+				for (let x=0; x < response.features.length; x++) {
+					let eq: Feature = response.features[x];
+
+					let marker = {
+						lat: eq.geometry['coordinates'][1],
+						lng: eq.geometry['coordinates'][0]
+					};
+
+					$this.markers.push({ position: marker, label: eq.properties.mag.toString(), testItem: 22 });
+				}
+			});
 		} // On Component Load, use instead of constructor!
 
 		beforeUpdated() { } // Before Render
@@ -111,6 +147,9 @@
 
 		markerClick(index, marker) {
 			console.log(index, marker);
+
+			this.infoWindow.Content = "Test";
+			this.infoWindow.Position = { lat: 0, lng: 1 }; 
 		}
 
 		geolocate() {
@@ -140,8 +179,10 @@
 			if (to != "map") return;
 
 			// Any specific code for the current page when ever changed to
+		}
 
-			this.updateRecentEarthquakes();
+		setProperty(prop: string, value: any) {
+			this[prop] = value;
 		}
 	};
 </script>
@@ -156,5 +197,11 @@
 
 	.map {
 		height: 100%;
+	}
+
+	.quake-list {
+		min-height: 400px;
+		max-height: 70vh;
+		overflow: auto;
 	}
 </style>
