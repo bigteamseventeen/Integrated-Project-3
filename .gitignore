@@ -4,6 +4,7 @@
 mix-manifest.json
 package-lock.json
 temp/
+.history/
 
 ######################################################
 ############# Node Specific Settings

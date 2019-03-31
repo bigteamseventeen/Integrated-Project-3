@@ -24,7 +24,8 @@
 					</GmapMap>
 				</div>
 
-				<div>
+				<!-- Debugging -->
+				<div style="display:none;">
 					<label>
 						<gmap-autocomplete @place_changed="setPlace"></gmap-autocomplete>
 						<button class="btn btn-primary" @click="addMarker">Add</button>
@@ -41,6 +42,26 @@
 				</div> 
 			</div>
 		</div>
+
+		<div style="display: block; height: 20px"></div>
+
+		<div v-if="selectedEarthquake != null" style="padding: 15px">
+			
+			<h4 style="margin-bottom:20px; width:100%">
+				{{selectedEarthquake.properties.title}}
+				<div class="float-right">
+					<button class="btn btn-outline-primary" @click="selectedEarthquake = null;">
+						<i class="fa fa-remove" aria-hidden="true"></i>
+						Clear Active Selection
+					</button>
+				</div>
+			</h4>
+
+			<div><p>Earthquake Time: {{getFullDateString(selectedEarthquake.properties.time)}} 
+				<small><timeago :datetime="selectedEarthquake.properties.time" :auto-update="60"></timeago></small></p></div>
+
+			<a :href="selectedEarthquake.properties.url">View more details at USGS.gov</a>
+		</div>
 	</div>
 </template>
 
@@ -48,6 +69,7 @@
 	import {Component, Vue, Watch} from 'vue-property-decorator';
 	import {GetEarthQuakes, EQDateSpan, EQSignificance} from '../../ts/API/EarthQuakes';
 	import {Feature, FeatureCollection} from 'geojson';
+	import MapEarthquakeItem from '../Components/map-earthquake-item.vue';
 
 	class InfomationWindow {
 		Position: {lat: number, lng: number} = null;
@@ -90,6 +112,8 @@
 			}
 		};
 
+		selectedEarthquake: Feature = null;
+
 		//
 		// ---------- Methods and Computed ----------
 		constructor() { 
@@ -102,7 +126,6 @@
 
 		async mounted() { 
 			this.geolocate();
-
 
 			let $this = this;
 			GetEarthQuakes(EQDateSpan.Week, EQSignificance.ALL, async function(response,status) {
@@ -184,6 +207,28 @@
 		setProperty(prop: string, value: any) {
 			this[prop] = value;
 		}
+
+		openEarthquakeClick(item: MapEarthquakeItem) {
+			let earthquake: Feature = item.eq;
+
+			this.selectedEarthquake = earthquake;
+
+			this.zoom = 12;
+            this.center = {
+                lat: earthquake.geometry['coordinates'][1],
+                lng: earthquake.geometry['coordinates'][0]
+            };
+		}
+
+		getFullDateString(time: any): string {
+            let date = new Date(time);
+
+            return date.toLocaleTimeString() + ", " + 
+                ([ "Sunday", "Monday", "Tuesday", 
+                    "Wednesday", "Thursday", "Friday", 
+                    "Saturday" ])[date.getDay()] + 
+                " " + date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear();
+        }
 	};
 </script>
 
@@ -205,3 +250,47 @@
 		overflow: auto;
 	}
 </style>
+
+<!-- 
+JS FEATURE STRUCTURE
+{
+  "type": "Feature",
+  "properties": {
+    "mag": 1.27,
+    "place": "10km ESE of Anza, CA",
+    "time": 1552912986020,
+    "updated": 1552913631400,
+    "tz": -480,
+    "url": "https://earthquake.usgs.gov/earthquakes/eventpage/ci38274015",
+    "detail": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/detail/ci38274015.geojson",
+    "felt": null,
+    "cdi": null,
+    "mmi": null,
+    "alert": null,
+    "status": "automatic",
+    "tsunami": 0,
+    "sig": 25,
+    "net": "ci",
+    "code": "38274015",
+    "ids": ",ci38274015,",
+    "sources": ",ci,",
+    "types": ",focal-mechanism,geoserve,nearby-cities,origin,phase-data,",
+    "nst": 52,
+    "dmin": 0.04138,
+    "rms": 0.17,
+    "gap": 49,
+    "magType": "ml",
+    "type": "earthquake",
+    "title": "M 1.3 - 10km ESE of Anza, CA"
+  },
+  "geometry": {
+    "type": "Point",
+    "coordinates": [
+      -116.5658333,
+      33.528,
+      1.67
+    ]
+  },
+  "id": "ci38274015"
+}
+-->

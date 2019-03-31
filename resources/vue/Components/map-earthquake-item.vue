@@ -5,7 +5,7 @@
             <small><timeago :datetime="eq.properties.time" :auto-update="60"></timeago></small>
         </div>
         <p class="mb-1">{{eq.properties.place}}</p>
-        <small>{{getFullDateString()}}</small>
+        <small>{{getFullDateString(eq.properties.time)}}</small>
     </a>
 </template>
 
@@ -32,32 +32,22 @@
 		// ---------- Methods and Computed ----------
 		constructor() {
             super();
-            console.log("map-earthquake-item: constructor ", this);
+            // console.log("map-earthquake-item: constructor ", this);
         }
 
 		mounted() {
-            console.log("map-earthquake-item: mounted ", this);
+            // console.log("map-earthquake-item: mounted ", this);
             this.date = new Date(this.eq.properties.time);
         }
 
 		beforeUpdated() {}
     
-        getFullDateString(): string {
-            let date = new Date(this.eq.properties.time);
-
-            return date.toLocaleTimeString() + ", " + 
-                ([ "Sunday", "Monday", "Tuesday", 
-                    "Wednesday", "Thursday", "Friday", 
-                    "Saturday" ])[date.getDay()] + 
-                " " + date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear();
+        getFullDateString(time: any): string {
+            return this.map.getFullDateString(time);
         }
 
         onClick(): void {
-            this.map.setProperty('zoom', 12);
-            this.map.setProperty('center', {
-                lat: this.eq.geometry['coordinates'][1],
-                lng: this.eq.geometry['coordinates'][0]
-            });
+            this.map.openEarthquakeClick(this);
         }
     }
 </script>
