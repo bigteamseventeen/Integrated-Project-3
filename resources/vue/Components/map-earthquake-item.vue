@@ -47,7 +47,7 @@
         }
 
         onClick(): void {
-            this.map.openEarthquakeClick(this);
+            this.map.loadEarthquakeData(this.eq);
         }
     }
 </script>

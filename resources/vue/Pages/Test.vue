@@ -19,7 +19,7 @@
 	import { Component, Emit, Inject, Model, Prop, Provide, Vue, Watch } from 'vue-property-decorator';
 
 	@Component({})
-	export default class extends Vue {
+	export default class TestPage extends Vue {
 		//
 		// ---------- Properties ----------
 

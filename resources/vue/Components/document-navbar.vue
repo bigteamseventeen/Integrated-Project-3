@@ -6,6 +6,7 @@
 				<router-link to="/" class="p-2 text-dark">Home</router-link>
 				<router-link to="/map" class="p-2 text-dark">Map</router-link>
 				<router-link to="/pricing" class="p-2 text-dark">Pricing</router-link>
+				<router-link to="/taxi" class="p-2 text-dark">Taxi Routes</router-link>
 				<router-link to="/testing" class="p-2 text-dark">Tests</router-link>
 		</nav>
 	</div>

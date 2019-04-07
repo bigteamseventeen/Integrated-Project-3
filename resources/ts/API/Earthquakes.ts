@@ -39,8 +39,7 @@ export const URLS = {
 
 
 export function GetEarthQuakes(Span: EQDateSpan, Significance: EQSignificance, callback: (features: FeatureCollection, status) => void): void {
-    console.log("GetEarthQuakes: ", Span, Significance, callback);
-    
+    // console.log("GetEarthQuakes: ", Span, Significance, callback);
     $.ajax({
         type: "GET",
         url: `${this.URLS[Significance]}_${Span}.geojson`,

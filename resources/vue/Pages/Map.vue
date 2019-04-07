@@ -18,7 +18,7 @@
 							<GmapMarker :key="index" v-for="(m, index) in markers"
 										:label="m.label"
 										:position="m.position"
-										:clickable="true" @click="center=m.position;markerClick(index, m)"
+										:clickable="true" @click="markerClick(index, m)"
 							></GmapMarker>
 						</GmapCluster>
 					</GmapMap>
@@ -57,18 +57,50 @@
 				</div>
 			</h4>
 
-			<div><p>Earthquake Time: {{getFullDateString(selectedEarthquake.properties.time)}} 
-				<small><timeago :datetime="selectedEarthquake.properties.time" :auto-update="60"></timeago></small></p></div>
+			<div class="row" >
+				<div class="col-md-6">
+					<div style="font-weight: bold;">Earthquake Information</div>
+					<div><p>Earthquake Time: {{getFullDateString(selectedEarthquake.properties.time)}} 
+						<small><timeago :datetime="selectedEarthquake.properties.time" :auto-update="60"></timeago></small></p></div>
+				</div>
 
+				<div class="col-md-6">
+					<div v-if="weather != null">
+						<div style="font-weight: bold;">{{strCurrentWeather}}</div>
+						<div class="row">
+							<div class="col-md-2"> <img :src="weather.current.condition.icon" width="64" height="64"> </div>
+							<div class="col-md-8">
+								<!-- <div>Weather time: {{weather.locoation.localtime}}</div> -->
+								<div>Conditions: {{weather.current.condition.text}}</div>
+								<div>Temperature: {{weather.current.temp_c}}&deg;C, {{weather.current.temp_f}}&deg;F</div>
+							</div>
+						</div>
+						
+						<div>Feels like: {{weather.current.feelslike_c}}&deg;C, {{weather.current.feelslike_f}}&deg;F</div>
+						<div>Gusts: {{weather.current.gust_mph}} MPH, {{weather.current.gust_kph}} KPH</div>
+						<div>Winds: {{weather.current.wind_dir}} with speeds of {{weather.current.wind_mph}} MPH, {{weather.current.wind_kph}} KPH</div>
+					</div>	
+					<div v-else>
+						<div style="font-weight: bold;">{{title}}</div>
+						<p>No weather data found for location.</p>
+					</div>
+
+					<!-- <map-weather-information :weather="currentWeather" :title="strCurrentWeather" :map="self"></map-weather-information>
+					<map-weather-information :weather="historicWeather" :titke="strHistoricWeather" :map="self"></map-weather-information> -->
+				</div>
+			</div>
+			
 			<a :href="selectedEarthquake.properties.url">View more details at USGS.gov</a>
 		</div>
 	</div>
 </template>
 
 <script lang="ts">
-	import {Component, Vue, Watch} from 'vue-property-decorator';
-	import {GetEarthQuakes, EQDateSpan, EQSignificance} from '../../ts/API/EarthQuakes';
-	import {Feature, FeatureCollection} from 'geojson';
+	import { Component, Vue, Watch } from 'vue-property-decorator';
+	import { Feature, FeatureCollection } from 'geojson';
+
+	import { GetEarthQuakes, EQDateSpan, EQSignificance } from '../../ts/API/EarthQuakes';
+	import { GetCurrentWeather, WeatherAPIResponse, GetHistoricWeather } from "../../ts/API/Weather";
 	import MapEarthquakeItem from '../Components/map-earthquake-item.vue';
 
 	class InfomationWindow {
@@ -91,10 +123,10 @@
 
 		//
 		// ---------- Data ----------
-		center: object = { lat: 55.866486, lng: -4.250251 };
+		center: { lat: number; lng: number } = { lat: 55.866486, lng: -4.250251 };
 		zoom: number = 2;
-      	markers = [];
-      	places = [];
+	  	markers = [];
+	  	places = [];
 		currentPlace = null;
 		recentEarthquakes: Feature[] = [];
 		self: Map;
@@ -113,6 +145,12 @@
 		};
 
 		selectedEarthquake: Feature = null;
+		currentWeather: WeatherAPIResponse = null;
+		historicWeather: WeatherAPIResponse = null;
+		weather = null;
+
+		strCurrentWeather = "Current Weather";
+		strHistoricWeather = "Weather at time of Earthquake";
 
 		//
 		// ---------- Methods and Computed ----------
@@ -142,7 +180,7 @@
 						lng: eq.geometry['coordinates'][0]
 					};
 
-					$this.markers.push({ position: marker, label: eq.properties.mag.toString(), testItem: 22 });
+					$this.markers.push({ position: marker, label: eq.properties.mag.toString(), earthquake: eq });
 				}
 			});
 		} // On Component Load, use instead of constructor!
@@ -169,10 +207,11 @@
 		}
 
 		markerClick(index, marker) {
-			console.log(index, marker);
-
-			this.infoWindow.Content = "Test";
-			this.infoWindow.Position = { lat: 0, lng: 1 }; 
+			this.center = marker.position;
+			this.infoWindow.Position = this.center;
+			this.infoWindow.Content = marker.earthquake.properties.title;
+			this.infoWindow.Opened = true;
+			this.loadEarthquakeData(marker.earthquake);
 		}
 
 		geolocate() {
@@ -208,27 +247,42 @@
 			this[prop] = value;
 		}
 
-		openEarthquakeClick(item: MapEarthquakeItem) {
-			let earthquake: Feature = item.eq;
+
+		loadEarthquakeData(earthquake: Feature){
+			let $this = this;
 
 			this.selectedEarthquake = earthquake;
-
 			this.zoom = 12;
-            this.center = {
-                lat: earthquake.geometry['coordinates'][1],
-                lng: earthquake.geometry['coordinates'][0]
-            };
+			this.center = {
+				lat: earthquake.geometry["coordinates"][1],
+				lng: earthquake.geometry["coordinates"][0]
+			};
+
+			this.infoWindow.Position = this.center;
+			this.infoWindow.Content = earthquake.properties.title;
+			this.infoWindow.Opened = true;
+
+			$this.historicWeather = null;
+			GetHistoricWeather(this.center, new Date(earthquake.properties.time), (weather, status)=>{
+				$this.historicWeather = weather;
+			});
+
+			this.currentWeather = null;
+			GetCurrentWeather(this.center, (weather, status) => {
+				$this.currentWeather = weather;
+				$this.weather = weather;
+			});
 		}
 
 		getFullDateString(time: any): string {
-            let date = new Date(time);
+			let date = new Date(time);
 
-            return date.toLocaleTimeString() + ", " + 
-                ([ "Sunday", "Monday", "Tuesday", 
-                    "Wednesday", "Thursday", "Friday", 
-                    "Saturday" ])[date.getDay()] + 
-                " " + date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear();
-        }
+			return date.toLocaleTimeString() + ", " + 
+				([ "Sunday", "Monday", "Tuesday", 
+					"Wednesday", "Thursday", "Friday", 
+					"Saturday" ])[date.getDay()] + 
+				" " + date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear();
+		}
 	};
 </script>
 
@@ -256,40 +310,40 @@ JS FEATURE STRUCTURE
 {
   "type": "Feature",
   "properties": {
-    "mag": 1.27,
-    "place": "10km ESE of Anza, CA",
-    "time": 1552912986020,
-    "updated": 1552913631400,
-    "tz": -480,
-    "url": "https://earthquake.usgs.gov/earthquakes/eventpage/ci38274015",
-    "detail": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/detail/ci38274015.geojson",
-    "felt": null,
-    "cdi": null,
-    "mmi": null,
-    "alert": null,
-    "status": "automatic",
-    "tsunami": 0,
-    "sig": 25,
-    "net": "ci",
-    "code": "38274015",
-    "ids": ",ci38274015,",
-    "sources": ",ci,",
-    "types": ",focal-mechanism,geoserve,nearby-cities,origin,phase-data,",
-    "nst": 52,
-    "dmin": 0.04138,
-    "rms": 0.17,
-    "gap": 49,
-    "magType": "ml",
-    "type": "earthquake",
-    "title": "M 1.3 - 10km ESE of Anza, CA"
+	"mag": 1.27,
+	"place": "10km ESE of Anza, CA",
+	"time": 1552912986020,
+	"updated": 1552913631400,
+	"tz": -480,
+	"url": "https://earthquake.usgs.gov/earthquakes/eventpage/ci38274015",
+	"detail": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/detail/ci38274015.geojson",
+	"felt": null,
+	"cdi": null,
+	"mmi": null,
+	"alert": null,
+	"status": "automatic",
+	"tsunami": 0,
+	"sig": 25,
+	"net": "ci",
+	"code": "38274015",
+	"ids": ",ci38274015,",
+	"sources": ",ci,",
+	"types": ",focal-mechanism,geoserve,nearby-cities,origin,phase-data,",
+	"nst": 52,
+	"dmin": 0.04138,
+	"rms": 0.17,
+	"gap": 49,
+	"magType": "ml",
+	"type": "earthquake",
+	"title": "M 1.3 - 10km ESE of Anza, CA"
   },
   "geometry": {
-    "type": "Point",
-    "coordinates": [
-      -116.5658333,
-      33.528,
-      1.67
-    ]
+	"type": "Point",
+	"coordinates": [
+	  -116.5658333,
+	  33.528,
+	  1.67
+	]
   },
   "id": "ci38274015"
 }
