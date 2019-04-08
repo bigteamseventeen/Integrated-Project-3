@@ -27,7 +27,7 @@ import Home from "../vue/Pages/Home.vue";
 import Map from "../vue/Pages/Map.vue";
 import Pricing from "../vue/Pages/Pricing.vue";
 import TestPage from "../vue/Pages/Test.vue";
-import TaxiPage from "../vue/Pages/Weather.vue";
+import WeatherPage from "../vue/Pages/Weather.vue";
 
 //
 // Setup the vue libraries
@@ -55,7 +55,7 @@ const router = new Router({
 		{ path: '/', name: 'home', component: Home, meta: {title: "Home" } },
 		{ path: '/map', name: 'map', component: Map, meta: {title: "Maps" } },
 		{ path: '/pricing', name: 'pricing', component: Pricing, meta: { title: "Pricing" } },
-		{ path: '/weather', name: 'weather', component: TaxiPage, meta: { title: "Weather" } },
+		{ path: '/weather', name: 'weather', component: WeatherPage, meta: { title: "Weather" } },
 		{ path: '/testing', name: 'test', component: TestPage, meta: { title: "Tests" } }
 	],
 

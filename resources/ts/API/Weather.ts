@@ -38,8 +38,6 @@ export function GetHistoricWeather_Query(qry: String, date: Date,
 	callback: ((weather,s) => void), error: ((jqXHR, exception) => void) = null) 
 {
 	let dt = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
-	console.log(dt);
-	
 	$.ajax({
 		type: "GET",
 		url: `${getAPIEndpoint("history")}&dt=${dt}&q=${qry}`,
@@ -50,8 +48,8 @@ export function GetHistoricWeather_Query(qry: String, date: Date,
 			if (s == "success") {
 				console.log(weather);
 				if (weather.forecast.forecastday.length != 0) {
-					console.log("GetHistoricWeather_Query: weather.forecast.forecastday.length != 0", {location: weather.location, 
-						current: weather.forecast.forecastday[0].hour[date.getUTCHours()]});
+					// console.log("GetHistoricWeather_Query: weather.forecast.forecastday.length != 0", {location: weather.location, 
+					// 	current: weather.forecast.forecastday[0].hour[date.getUTCHours()]});
 
 					responseWeather = JSON.parse(JSON.stringify({
 						location: weather.location, 
@@ -68,12 +66,33 @@ export function GetHistoricWeather_Query(qry: String, date: Date,
 				}
 			}
 			
-			console.log("GetHistoricWeather_Query: Returning", responseWeather);
 			callback(responseWeather, s);
 		}),
 		error: error,
 		dataType: 'json',
 	});
+}
+
+export function GetWeatherForecast(qry: String, days: number, date: Date, 
+	callback: ((weather: WeatherAPIForecastResponse,s) => void), error: ((jqXHR, exception) => void) = null) 
+{
+	let dt = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+	
+	$.ajax({
+		type: "GET",
+		url: `${getAPIEndpoint("forecast")}&dt=${dt}&q=${qry}&days=${days}`,
+		data: {},
+		success: callback,
+		error: error,
+		dataType: 'json',
+	});
+}
+
+export interface Astro {
+	moonrise: string; //"08:10 AM"
+	moonset: string; // "11:50 PM"
+	sunrise: string; // "06:30 AM"
+	sunset: string; // "08:08 PM"
 }
 
 export interface Location {
@@ -119,9 +138,26 @@ export interface WeatherConditions {
 	gust_kph: number;
 }
 
+export interface WeatherForecast {
+	forecastday: DayForecast[];
+}
+
+export interface DayForecast {
+	astro: Astro;
+	date: string;
+	date_epoch: number;
+	day: WeatherConditions;
+}
+
 export interface WeatherAPIResponse {
 	location: Location;
 	current: WeatherConditions;
+}
+
+export interface WeatherAPIForecastResponse {
+	current: WeatherConditions;
+	location: Location;
+	forecast: WeatherForecast;
 }
 
 /**

@@ -2,19 +2,17 @@
 	<div>
 		<div v-if="weather != null">
 			<div style="font-weight: bold;">{{title}}</div>
-			<div class="row">
-				<div class="col-md-2"> <img :src="weather.current.condition.icon" width="64" height="64"> </div>
-				<div class="col-md-8">
-					<div v-if="weather.current.time != null">Weather time: {{weather.current.time}}</div>
-					<div v-else>Local time: {{weather.location.localtime}}</div>
-					<div>Conditions: {{weather.current.condition.text}}</div>
-					<div>Temperature: {{weather.current.temp_c}}&deg;C, {{weather.current.temp_f}}&deg;F</div>
-				</div>
-			</div>
 			
-			<div>Feels like: {{weather.current.feelslike_c}}&deg;C, {{weather.current.feelslike_f}}&deg;F</div>
-			<div>Gusts: {{weather.current.gust_mph}} MPH, {{weather.current.gust_kph}} KPH</div>
-			<div>Winds: {{weather.current.wind_dir}} with speeds of {{weather.current.wind_mph}} MPH, {{weather.current.wind_kph}} KPH</div>
+			<img :src="'https://' + weather.current.condition.icon" align="left" width="64" height="64">
+			<div v-if="weather.current.time != null">Weather time: {{weather.current.time}}</div>
+			<div v-else>Local time: {{weather.location.localtime}}</div>
+
+			<div>Conditions: {{weather.current.condition.text}}</div>
+			<div>Temperature: {{weather.current.temp_c}}&deg;C, {{weather.current.temp_f}}&deg;F</div>
+	
+			<div v-if="weather.current.feelslike_c != null">Feels like: {{weather.current.feelslike_c}}&deg;C, {{weather.current.feelslike_f}}&deg;F</div>
+			<div v-if="weather.current.gust_mph != null">Gusts: {{weather.current.gust_mph}} MPH, {{weather.current.gust_kph}} KPH</div>
+			<div>Winds: <span v-if="weather.current.wind_dir != null">{{weather.current.wind_dir}} with speeds of </span> {{weather.current.wind_mph}} MPH, {{weather.current.wind_kph}} KPH</div>
 		</div>	
 		<div v-else>
 			<div style="font-weight: bold;">{{title}}</div>
