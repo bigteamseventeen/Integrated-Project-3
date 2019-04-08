@@ -13,7 +13,7 @@ import VueTimeago from 'vue-timeago'
 import DocumentNavbar from "../vue/Components/document-navbar.vue"; // <document-navbar></document-navbar>
 import DocumentFooter from "../vue/Components/document-footer.vue"; // <document-footer></document-footer> 
 import MapEarthquakeItem from "../vue/Components/map-earthquake-item.vue"; // <map-earthquake-item :eq="earthquake" :map="mapPagee"></map-earthquake-item> 
-import MapWeatherInformation from "../vue/Components/map-earthquake-item.vue"; // <map-weather-information :weather=></map-weather-information>
+import MapWeatherInformation from "../vue/Components/map-weather-information.vue"; // <map-weather-information :weather="w" :title="strTitle"></map-weather-information>
 
 // tslint:disable-next-line: 
 Vue.component('document-navbar', DocumentNavbar);
@@ -21,14 +21,13 @@ Vue.component('document-footer', DocumentFooter);
 Vue.component('map-earthquake-item', MapEarthquakeItem);
 Vue.component('map-weather-information', MapWeatherInformation);
 
-
 //
 // Pages
 import Home from "../vue/Pages/Home.vue";
 import Map from "../vue/Pages/Map.vue";
 import Pricing from "../vue/Pages/Pricing.vue";
 import TestPage from "../vue/Pages/Test.vue";
-import TaxiPage from "../vue/Pages/Taxi.vue";
+import TaxiPage from "../vue/Pages/Weather.vue";
 
 //
 // Setup the vue libraries
@@ -56,7 +55,7 @@ const router = new Router({
 		{ path: '/', name: 'home', component: Home, meta: {title: "Home" } },
 		{ path: '/map', name: 'map', component: Map, meta: {title: "Maps" } },
 		{ path: '/pricing', name: 'pricing', component: Pricing, meta: { title: "Pricing" } },
-		{ path: '/taxi', name: 'taxi', component: TaxiPage, meta: { title: "Taxi Routes" } },
+		{ path: '/weather', name: 'weather', component: TaxiPage, meta: { title: "Weather" } },
 		{ path: '/testing', name: 'test', component: TestPage, meta: { title: "Tests" } }
 	],
 

@@ -1,51 +1,48 @@
 <template>
 	<div class="container">
-		
-		<div class="row">
-			<div class="col-md-8"> 
-				<h3>Map of Earthquakes</h3>
-
-
-				<div class="container-map">
-					<!-- Map -->
-					<GmapMap :center="center" :zoom="zoom" style="width:100%;height:100%;">
-						<gmap-info-window :options="infoWindow.Options" :position="infoWindow.Position" 
-										  :opened="infoWindow.Opened"   @closeclick="infoWindow.Opened=false">
-							{{infoWindow.Content}}
-						</gmap-info-window>
-
-						<GmapCluster>
-							<GmapMarker :key="index" v-for="(m, index) in markers"
-										:label="m.label"
-										:position="m.position"
-										:clickable="true" @click="markerClick(index, m)"
-							></GmapMarker>
-						</GmapCluster>
-					</GmapMap>
+		<div style="max-height:500px;">
+			<div class="row">
+				<div class="col-md-8"> 
+					<h3>Map of Earthquakes</h3>
+					<div>
+						<!-- Map -->
+						<GmapMap :center="center" :zoom="zoom" style="height:500px;">
+							<gmap-info-window :options="infoWindow.Options" :position="infoWindow.Position" 
+											  :opened="infoWindow.Opened"   @closeclick="infoWindow.Opened=false">
+								<div v-html="infoWindow.Content"> </div>
+							</gmap-info-window>
+	
+							<GmapCluster>
+								<GmapMarker :key="index" v-for="(m, index) in markers"
+											:label="m.label"
+											:position="m.position"
+											:clickable="true" @click="markerClick(index, m)"
+								></GmapMarker>
+							</GmapCluster>
+						</GmapMap>
+					</div>
+	
+					<!-- Debugging -->
+					<div style="display:none;">
+						<label>
+							<gmap-autocomplete @place_changed="setPlace"></gmap-autocomplete>
+							<button class="btn btn-primary" @click="addMarker">Add</button>
+						</label>
+						<br/>
+					</div>		
 				</div>
-
-				<!-- Debugging -->
-				<div style="display:none;">
-					<label>
-						<gmap-autocomplete @place_changed="setPlace"></gmap-autocomplete>
-						<button class="btn btn-primary" @click="addMarker">Add</button>
-					</label>
-					<br/>
-				</div>		
-			</div>
-			<div class="col-md-4">
-				<h3>Recent Earthquakes</h3>
 				
-				<div class="list-group quake-list">
-					<map-earthquake-item v-for="(item,index) in recentEarthquakes"
-						:key="index" :eq="item" :map="self"></map-earthquake-item>
-				</div> 
+				<div class="col-md-4">
+					<h3>Recent Earthquakes</h3>
+					
+					<div class="list-group" style="height: 500px; overflow: auto">
+						<map-earthquake-item v-for="(item,index) in recentEarthquakes"
+							:key="index" :eq="item" :map="self"></map-earthquake-item>
+					</div> 
+				</div>
 			</div>
 		</div>
-
-		<div style="display: block; height: 20px"></div>
-
-		<div v-if="selectedEarthquake != null" style="padding: 15px">
+		<div v-if="selectedEarthquake != null" style="margin-top: 56px;">
 			
 			<h4 style="margin-bottom:20px; width:100%">
 				{{selectedEarthquake.properties.title}}
@@ -58,35 +55,18 @@
 			</h4>
 
 			<div class="row" >
-				<div class="col-md-6">
+				<div class="col-md-4">
 					<div style="font-weight: bold;">Earthquake Information</div>
-					<div><p>Earthquake Time: {{getFullDateString(selectedEarthquake.properties.time)}} 
-						<small><timeago :datetime="selectedEarthquake.properties.time" :auto-update="60"></timeago></small></p></div>
+					<div><p>Earthquake Time: {{getFullDateString(selectedEarthquake.properties.time)}} </p></div>
+					<small><timeago :datetime="selectedEarthquake.properties.time" :auto-update="60"></timeago></small>
 				</div>
 
-				<div class="col-md-6">
-					<div v-if="weather != null">
-						<div style="font-weight: bold;">{{strCurrentWeather}}</div>
-						<div class="row">
-							<div class="col-md-2"> <img :src="weather.current.condition.icon" width="64" height="64"> </div>
-							<div class="col-md-8">
-								<!-- <div>Weather time: {{weather.locoation.localtime}}</div> -->
-								<div>Conditions: {{weather.current.condition.text}}</div>
-								<div>Temperature: {{weather.current.temp_c}}&deg;C, {{weather.current.temp_f}}&deg;F</div>
-							</div>
-						</div>
-						
-						<div>Feels like: {{weather.current.feelslike_c}}&deg;C, {{weather.current.feelslike_f}}&deg;F</div>
-						<div>Gusts: {{weather.current.gust_mph}} MPH, {{weather.current.gust_kph}} KPH</div>
-						<div>Winds: {{weather.current.wind_dir}} with speeds of {{weather.current.wind_mph}} MPH, {{weather.current.wind_kph}} KPH</div>
-					</div>	
-					<div v-else>
-						<div style="font-weight: bold;">{{title}}</div>
-						<p>No weather data found for location.</p>
-					</div>
+				<div class="col-md-4">
+					<map-weather-information :weather="historicWeather" :title="strHistoricWeather" :map="self"></map-weather-information>
+				</div>
 
-					<!-- <map-weather-information :weather="currentWeather" :title="strCurrentWeather" :map="self"></map-weather-information>
-					<map-weather-information :weather="historicWeather" :titke="strHistoricWeather" :map="self"></map-weather-information> -->
+				<div class="col-md-4">
+					<map-weather-information :weather="currentWeather" :title="strCurrentWeather" :map="self"></map-weather-information>
 				</div>
 			</div>
 			
@@ -144,13 +124,11 @@
 			}
 		};
 
-		selectedEarthquake: Feature = null;
-		currentWeather: WeatherAPIResponse = null;
-		historicWeather: WeatherAPIResponse = null;
-		weather = null;
-
 		strCurrentWeather = "Current Weather";
 		strHistoricWeather = "Weather at time of Earthquake";
+		currentWeather: WeatherAPIResponse = null;
+		historicWeather: WeatherAPIResponse = null;
+		selectedEarthquake: Feature = null;
 
 		//
 		// ---------- Methods and Computed ----------
@@ -207,10 +185,6 @@
 		}
 
 		markerClick(index, marker) {
-			this.center = marker.position;
-			this.infoWindow.Position = this.center;
-			this.infoWindow.Content = marker.earthquake.properties.title;
-			this.infoWindow.Opened = true;
 			this.loadEarthquakeData(marker.earthquake);
 		}
 
@@ -259,18 +233,20 @@
 			};
 
 			this.infoWindow.Position = this.center;
-			this.infoWindow.Content = earthquake.properties.title;
+			this.infoWindow.Content = earthquake.properties.title + "<br><small>" 
+				+ new Date(earthquake.properties.time) + "</small>";
 			this.infoWindow.Opened = true;
-
-			$this.historicWeather = null;
-			GetHistoricWeather(this.center, new Date(earthquake.properties.time), (weather, status)=>{
-				$this.historicWeather = weather;
-			});
 
 			this.currentWeather = null;
 			GetCurrentWeather(this.center, (weather, status) => {
+				console.log("Current Weather: ", status, weather);
 				$this.currentWeather = weather;
-				$this.weather = weather;
+			});
+
+			$this.historicWeather = null;
+			GetHistoricWeather(this.center, new Date(earthquake.properties.time), (weather, status)=>{
+				console.log("Historic Weather: ", status, weather);
+				$this.historicWeather = weather;
 			});
 		}
 
@@ -278,7 +254,7 @@
 			let date = new Date(time);
 
 			return date.toLocaleTimeString() + ", " + 
-				([ "Sunday", "Monday", "Tuesday", 
+				([	"Sunday", "Monday", "Tuesday", 
 					"Wednesday", "Thursday", "Friday", 
 					"Saturday" ])[date.getDay()] + 
 				" " + date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear();
@@ -288,19 +264,16 @@
 
 <style scoped>
 	.container-map {
-		min-height: 400px;
+		/* min-height: 400px;
 		max-height: 70vh;
 		display: flex;
-		flex-direction: column;
-	}
-
-	.map {
-		height: 100%;
+		flex-direction: column; */
+		max-height: 500px;
 	}
 
 	.quake-list {
-		min-height: 400px;
-		max-height: 70vh;
+		/* min-height: 400px;
+		max-height: 70vh; */
 		overflow: auto;
 	}
 </style>

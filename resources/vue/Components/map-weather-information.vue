@@ -5,7 +5,8 @@
 			<div class="row">
 				<div class="col-md-2"> <img :src="weather.current.condition.icon" width="64" height="64"> </div>
 				<div class="col-md-8">
-					<div>Weather time: {{weather.locoation.localtime}}</div>
+					<div v-if="weather.current.time != null">Weather time: {{weather.current.time}}</div>
+					<div v-else>Local time: {{weather.location.localtime}}</div>
 					<div>Conditions: {{weather.current.condition.text}}</div>
 					<div>Temperature: {{weather.current.temp_c}}&deg;C, {{weather.current.temp_f}}&deg;F</div>
 				</div>
@@ -52,18 +53,11 @@
             // console.log("map-earthquake-item: constructor ", this);
         }
 
-		mounted() {
-			
-        }
-
+		mounted() { }
 		beforeUpdated() {}
     
         getFullDateString(time: any): string {
             return this.map.getFullDateString(time);
-        }
-
-        onClick(): void {
-            this.map.loadEarthquakeData(this.eq);
         }
     }
 </script>

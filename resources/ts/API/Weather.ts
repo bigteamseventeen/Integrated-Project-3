@@ -5,35 +5,76 @@ function getAPIEndpoint(type) {
 	return `http://api.apixu.com/v1/${type}.json?key=${APIXU_API_KEY}`;
 }
 
+interface LatLong { lat: number, lng: number }
+
 // http://api.apixu.com/v1/current.json?key=YOUR-APIXU-KEY&q=' + lat.toFixed(4) + ',' + lng.toFixed(4)
-export function GetCurrentWeather(location: {lat: number, lng: number}, 
-		callback: ((weather: WeatherAPIResponse,status) => void), error: ((jqXHR, exception) => void) = null ) 
+export function GetCurrentWeather(location: LatLong, 
+	callback: ((weather: WeatherAPIResponse,status) => void), error: ((jqXHR, exception) => void) = null ) 
 {
-	$.ajax({
-        type: "GET",
-        url: `${getAPIEndpoint("current")}&q=${location.lat.toFixed(4)},${location.lng.toFixed(4)}`,
-        data: {},
-		success: callback,
-		error: error,
-        dataType: 'json',
-    });
+	let qry = `${location.lat.toFixed(4)},${location.lng.toFixed(4)}`;
+	GetCurrentWeather_Query(qry, callback, error);
 }
 
-export function GetHistoricWeather(location: {lat: number, lng: number}, date: Date, 
-		callback: ((weather,s) => void), error: ((jqXHR, exception) => void) = null) 
+export function GetCurrentWeather_Query(qry: string, 
+	callback: ((weather: WeatherAPIResponse,status) => void), error: ((jqXHR, exception) => void) = null ) 
+{
+	$.ajax({
+		type: "GET",
+		url: `${getAPIEndpoint("current")}&q=${qry}`,
+		data: {},
+		success: callback,
+		error: error,
+		dataType: 'json',
+	});
+}
+
+export function GetHistoricWeather(location: LatLong, date: Date, 
+	callback: ((weather,s) => void), error: ((jqXHR, exception) => void) = null) 
+{
+	GetHistoricWeather_Query(`${location.lat.toFixed(4)},${location.lng.toFixed(4)}`, date, callback, error);
+}
+
+export function GetHistoricWeather_Query(qry: String, date: Date, 
+	callback: ((weather,s) => void), error: ((jqXHR, exception) => void) = null) 
 {
 	let dt = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
-
+	console.log(dt);
+	
 	$.ajax({
-        type: "GET",
-        url: `${getAPIEndpoint("current")}&dt=${dt}&q=${location.lat.toFixed(4)},${location.lng.toFixed(4)}`,
-        data: {},
-		success: callback,
-		error: error,
-        dataType: 'json',
-    });
-}
+		type: "GET",
+		url: `${getAPIEndpoint("history")}&dt=${dt}&q=${qry}`,
+		data: {},
+		success: ((weather, s) => {
+			let responseWeather = null;
 
+			if (s == "success") {
+				console.log(weather);
+				if (weather.forecast.forecastday.length != 0) {
+					console.log("GetHistoricWeather_Query: weather.forecast.forecastday.length != 0", {location: weather.location, 
+						current: weather.forecast.forecastday[0].hour[date.getUTCHours()]});
+
+					responseWeather = JSON.parse(JSON.stringify({
+						location: weather.location, 
+						current: weather.forecast.forecastday[0].hour[date.getUTCHours()],
+						api_response: weather,
+						wanted_date: dt,
+						wanted_hour: {
+							local: date.getHours(),
+							utc: date.getUTCHours()
+						}
+					}));
+				} else {
+					s = "nocontent";
+				}
+			}
+			
+			console.log("GetHistoricWeather_Query: Returning", responseWeather);
+			callback(responseWeather, s);
+		}),
+		error: error,
+		dataType: 'json',
+	});
+}
 
 export interface Location {
 	name: string;
@@ -82,8 +123,6 @@ export interface WeatherAPIResponse {
 	location: Location;
 	current: WeatherConditions;
 }
-
-
 
 /**
 {
