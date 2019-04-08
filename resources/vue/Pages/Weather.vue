@@ -80,7 +80,7 @@
 		//
 		// ---------- Data ----------
 		forecast: WeatherAPICollection[] = null;
-		query: string = "glasgow";
+		query: string = ""; // glasgow or smtn
 
 		//
 		// ---------- Methods and Computed ----------
