@@ -7,6 +7,7 @@
 			<router-link to="/map" class="p-2 text-dark">Map</router-link>
 			<router-link to="/pricing" class="p-2 text-dark">Pricing</router-link>
 			<router-link to="/weather" class="p-2 text-dark">Weather</router-link>
+			<router-link to="/tvseries" class="p-2 text-dark">TVSeries</router-link>
 			<router-link to="/testing" class="p-2 text-dark">Tests</router-link>
 		</nav>
 	</div>

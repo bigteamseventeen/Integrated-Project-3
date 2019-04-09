@@ -5,21 +5,24 @@
 				<div class="col-md-8">
 					<h3>Container for Initial Graph</h3>
 					<div>
-						<!-- Map -->
-
+						<GChart
+						type="LineChart"
+						:data="chartData"
+						:options="chartOptions"/>
 					</div>
-	
-					<!-- Debugging -->
-					<div style="display:none;">
-						<label>
-							<button class="btn btn-primary">Add</button>
-						</label>
-						<br/>
-					</div>		
 				</div>
-				
+
 				<div class="col-md-4">
-					<h3>Most Popular Shows</h3>
+					<div class="input-group mb-3">
+						<input name="txtLocation" type="text" class="form-control" placeholder="Enter show..."
+							   aria-label="Show query" v-model="query">
+						<div class="input-group-append">
+							<button class="btn btn-outline-secondary" type="button" @click="loadShowInformation_Click()">
+								Load Show
+							</button>
+						</div>
+					</div>
+
 					<div class="list-group" style="height: 500px; overflow: auto">
 						<tvseries-item v-for="(item,index) in popularShows"
 											 :key="index" :tvS="item" :tvSeries="self"></tvseries-item>
@@ -45,11 +48,31 @@
 		popularShows: SeriesList.Result[] = [];
 		self: TVSeries;
 		selectedTVSeries: SeriesList.Result = null;
+		query: string = "";
 
-		constructor() { 
+		data() {
+			return {
+				// Array will be automatically processed with visualization.arrayToDataTable function
+				chartData: [
+					["Year", "Sales", "Expenses", "Profit"],
+					["2014", 1000, 400, 200],
+					["2015", 1170, 460, 250],
+					["2016", 660, 1120, 300],
+					["2017", 1030, 540, 350]
+				],
+				chartOptions: {
+					title: "Company Performance",
+					subtitle: "Sales, Expenses, and Profit: 2014-2017",
+					height: '500'
+				}
+			};
+		}
+
+		constructor() {
 			super();
 			this.self = this;
 			this.updateShowList();
+
 		 }
 
 		async mounted() {
@@ -76,6 +99,21 @@
 			});
 			*/
 		} // On Component Load, use instead of constructor!
+
+		loadShowInformation_Click(): void {
+			let $this = this;
+
+
+		}
+
+		loadShow(tvid: SeriesList.Result){
+			let $this = this;
+
+			this.selectedTVSeries = tvid;
+
+
+		}
+
 
 		updateShowList() {
 			let $this = this;
