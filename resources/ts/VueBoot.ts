@@ -14,12 +14,14 @@ import DocumentNavbar from "../vue/Components/document-navbar.vue"; // <document
 import DocumentFooter from "../vue/Components/document-footer.vue"; // <document-footer></document-footer> 
 import MapEarthquakeItem from "../vue/Components/map-earthquake-item.vue"; // <map-earthquake-item :eq="earthquake" :map="mapPagee"></map-earthquake-item> 
 import MapWeatherInformation from "../vue/Components/map-weather-information.vue"; // <map-weather-information :weather="w" :title="strTitle"></map-weather-information>
+import TVSeriesItem from "../vue/Components/tvseries-item.vue"; // <map-weather-information :weather="w" :title="strTitle"></map-weather-information>
 
 // tslint:disable-next-line: 
 Vue.component('document-navbar', DocumentNavbar);
 Vue.component('document-footer', DocumentFooter);
 Vue.component('map-earthquake-item', MapEarthquakeItem);
 Vue.component('map-weather-information', MapWeatherInformation);
+Vue.component('tvseries-item', TVSeriesItem);
 
 //
 // Pages
@@ -28,6 +30,7 @@ import Map from "../vue/Pages/Map.vue";
 import Pricing from "../vue/Pages/Pricing.vue";
 import TestPage from "../vue/Pages/Test.vue";
 import WeatherPage from "../vue/Pages/Weather.vue";
+import TVSeries from "../vue/Pages/TVSeries.vue";
 
 //
 // Setup the vue libraries
@@ -56,7 +59,8 @@ const router = new Router({
 		{ path: '/map', name: 'map', component: Map, meta: {title: "Maps" } },
 		{ path: '/pricing', name: 'pricing', component: Pricing, meta: { title: "Pricing" } },
 		{ path: '/weather', name: 'weather', component: WeatherPage, meta: { title: "Weather" } },
-		{ path: '/testing', name: 'test', component: TestPage, meta: { title: "Tests" } }
+		{ path: '/testing', name: 'test', component: TestPage, meta: { title: "Tests" } },
+		{ path: '/tvseries', name: 'tvseries', component: TVSeries, meta: { title: "TV Series" } },
 	],
 
 	linkActiveClass: "active",
