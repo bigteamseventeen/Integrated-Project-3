@@ -3,12 +3,14 @@
 		<div style="max-height:500px;">
 			<div class="row">
 				<div class="col-md-8">
-					<h3>Container for Initial Graph</h3>
+					<h3>TV Series Visualizer</h3>
 					<div>
 						<GChart
 						type="LineChart"
 						:data="chartData"
-						:options="chartOptions"/>
+						:options="chartOptions"
+						@ready="onChartReady"
+						/>
 					</div>
 				</div>
 
@@ -54,25 +56,30 @@
 			return {
 				// Array will be automatically processed with visualization.arrayToDataTable function
 				chartData: [
-					["Year", "Sales", "Expenses", "Profit"],
-					["2014", 1000, 400, 200],
-					["2015", 1170, 460, 250],
-					["2016", 660, 1120, 300],
-					["2017", 1030, 540, 350]
+					["Season", "1", "2", "3"],
+					[{v: "1", f: "1"}, 6.5, 7, 9],
+					["2", 3.5, 4, 3],
+					["3", 9, 7, 8],
+					["4", 5, 5, 6]
 				],
 				chartOptions: {
 					title: "Company Performance",
 					subtitle: "Sales, Expenses, and Profit: 2014-2017",
-					height: '500'
+					height: '500',
+					chartArea: {'width' : '100%', 'height' : '80%', 'left' : '20', },
+					legend: {'position': 'bottom'}
 				}
 			};
 		}
+
 
 		constructor() {
 			super();
 			this.self = this;
 			this.updateShowList();
-
+			this.data();
+			console.log("here");
+			console.log(this.data());
 		 }
 
 		async mounted() {
@@ -106,14 +113,11 @@
 
 		}
 
-		loadShow(tvid: SeriesList.Result){
+		loadShow(tvid: SeriesList.Result) {
 			let $this = this;
 
 			this.selectedTVSeries = tvid;
-
-
 		}
-
 
 		updateShowList() {
 			let $this = this;
@@ -124,13 +128,6 @@
 				}
 				$this.popularShows = response.results;
 			});
-		}
-		
-		@Watch('$route')
-		onRouteVisit (to, from) {
-			if (to != "map") return;
-
-			// Any specific code for the current page when ever changed to
 		}
 
 		/*
