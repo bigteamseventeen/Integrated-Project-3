@@ -8,6 +8,7 @@
 				<router-link to="/pricing" class="p-2 text-dark">Pricing</router-link>
 				<router-link to="/taxi" class="p-2 text-dark">Taxi Routes</router-link>
 				<router-link to="/testing" class="p-2 text-dark">Tests</router-link>
+				<router-link to="/pollution" class="p-2 text-dark">Air Quality</router-link>
 		</nav>
 	</div>
 </template>

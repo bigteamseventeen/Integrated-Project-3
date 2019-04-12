@@ -28,6 +28,7 @@ import Map from "../vue/Pages/Map.vue";
 import Pricing from "../vue/Pages/Pricing.vue";
 import TestPage from "../vue/Pages/Test.vue";
 import TaxiPage from "../vue/Pages/Weather.vue";
+import AirqualityPage from "../vue/Pages/Airquality.vue";
 
 //
 // Setup the vue libraries
@@ -57,6 +58,10 @@ const router = new Router({
 		{ path: '/pricing', name: 'pricing', component: Pricing, meta: { title: "Pricing" } },
 		{ path: '/weather', name: 'weather', component: TaxiPage, meta: { title: "Weather" } },
 		{ path: '/testing', name: 'test', component: TestPage, meta: { title: "Tests" } }
+
+		{ path: '/pollution', name: 'pollution', component: AirqualityPage, meta: { title: "Pollution levels" } },
+
+		{ path: '/test', name: 'test', component: TestPage, meta: { title: "Test Developer Page" } }
 	],
 
 	linkActiveClass: "active",
