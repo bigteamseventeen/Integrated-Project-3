@@ -1,10 +1,8 @@
 <template>
 	<div class="container">
-		
 		<div class="row">
 			<div class="col-md-8"> 
 				<h3>Earth Quakes - Test</h3>
-
 
 				<div class="container-map">
 					<!-- Map -->
