@@ -15,32 +15,24 @@
 </template>
 
 <script lang="ts">
-	import { Component, Emit, Inject, Model, Prop, Provide, Vue, Watch } from 'vue-property-decorator';
+	import { Component, Prop, Vue } from 'vue-property-decorator';
+
     /// <reference path="TVSeriesModules.ts" />
     import * as SeriesList from "SeriesList";
     import TVSeries from '../Pages/TVSeries.vue';
 
 	@Component({})
 	export default class TVSeriesItem extends Vue {
-		//
-		// ---------- Properties ----------
+
         @Prop()
         tvS: SeriesList.Result;
 
         @Prop()
         tvSeries: TVSeries;
-		//
-		// ---------- Methods and Computed ----------
+
 		constructor() {
             super();
-            // console.log("constructor ", this);
         }
-
-		mounted() {
-            // console.log("mounted ", this);
-        }
-
-		beforeUpdated() {}
 
         onClick(): void {
             this.tvSeries.loadShow(this.tvS["id"]);

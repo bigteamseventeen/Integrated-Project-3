@@ -3,7 +3,7 @@
 		<div style="max-height:500px;">
 			<div class="row">
 				<div class="col-md-8">
-					<nav class="navbar navbar-light navbar-expand-md navigation-clean">
+					<nav class="navbar navbar-expand-md navigation-clean">
 						<div class="container"><h3>TV Series Visualizer</h3><button data-toggle="collapse" data-target="#navcol-1" class="navbar-toggler"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
 							<div class="collapse navbar-collapse"
 								 id="navcol-1">
@@ -12,13 +12,13 @@
 										<a class="nav-link" @click="changeToLine();" href="#">Line</a></li>
 									<li role="presentation" class="nav-item">
 										<a class="nav-link" @click="changeToScatter();" href="#">Scatter</a></li>
-									<li class="dropdown nav-item">
+									<!--<li class="dropdown nav-item">
 										<a data-toggle="dropdown" class="dropdown-toggle nav-link">Seasons</a>
 										<div role="menu" class="dropdown-menu">
 											<a role="presentation" class="dropdown-item" href="#">First Item</a>
 											<a role="presentation" class="dropdown-item" href="#">Second Item</a>
 											<a role="presentation" class="dropdown-item" href="#">Third Item</a></div>
-									</li>
+									</li>-->
 								</ul>
 							</div>
 						</div>
@@ -37,11 +37,38 @@
 							</button>
 						</div>
 					</div>
-
 					<div class="list-group" style="height: 500px; overflow: auto">
 						<tvseries-item v-for="(item,index) in popularShows"
 											 :key="index" :tvS="item" :tvSeries="self"></tvseries-item>
 					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row" style="margin-bottom: 460px; margin-top: 80px" >
+			<div class="col-md-7">
+				<nav class="navbar navbar-light navbar-expand-md navigation-clean">
+					<div class="container">
+						<h4>Details</h4>
+					</div>
+				</nav>
+			</div>
+			<div class="col-md-5">
+			<nav class="navbar navbar-light navbar-expand-md navigation-clean">
+				<div class="container">
+					<h4>Episode List</h4>
+				</div>
+			</nav>
+			</div>
+			<div class="col-md-7">
+				<div class="d-block" style="max-height: 370px; overflow: auto">
+					<tvseries-show :tvS_E="tvSeriesObject" :tvSeries="self"></tvseries-show>
+				</div>
+			</div>
+			<div class="col-md-5">
+				<div class="list-group" style="max-height: 350px; overflow: auto">
+					<tvseries-episode v-for="(item,index) in episodeList"
+									  :key="index" :tvS="item" :tvSeries="self">
+					</tvseries-episode>
 				</div>
 			</div>
 		</div>
@@ -53,43 +80,26 @@
 	import { GetPopular, GetTopRated, GetTVID, GetTVID_Season, QueryTV } from "../../ts/API/TVSeries";
 	/// <reference path="TVSeriesModules.ts" />
 
-
 	import * as SeriesList from "SeriesList";
 	import * as TVID from "TVID";
 	import * as TVID_Season from "TVID_Season";
 
 	import TVSeriesItem from '../Components/tvseries-item.vue';
+	import TvseriesEpisode from "../Components/tvseries-episode.vue";
+	import TvseriesShow from "../Components/tvseries-show.vue";
 
-	@Component({})
+	@Component({
+		components: {TvseriesShow, TvseriesEpisode, TVSeriesItem}
+	})
+
 	export default class TVSeries extends Vue {
 		popularShows: SeriesList.Result[] = [];
 		self: TVSeries;
 		sType: string = "line";
 		selectedTVSeries: SeriesList.Result["id"] = 1399;
-
+		tvSeriesObject: TVID.RootObject;
+		episodeList: TVID_Season.Episode[] = [];
 		query: string = "";
-
-		/*
-		data() {
-			return {
-				// Array will be automatically processed with visualization.arrayToDataTable function
-				chartData: [
-					["Season", "1", "2", "3"],
-					[{v: "1", f: "1"}, 6.5, 7, 9],
-					["2", 3.5, 4, 3],
-					["3", 9, 7, 8],
-					["4", 5, 5, 6]
-				],
-				chartOptions: {
-					title: "",
-					subtitle: "Sales, Expenses, and Profit: 2014-2017",
-					height: '500',
-					chartArea: {'width' : '100%', 'height' : '80%', 'left' : '20', },
-					legend: {'position': 'bottom'}
-				}
-			};
-		}
-		*/
 
 		constructor() {
 			super();
@@ -113,14 +123,10 @@
 		loadShow(tvid: SeriesList.Result["id"]) {
 			let $this = this;
 			this.selectedTVSeries = tvid;
-			// Data collection
+			$this.episodeList = [];
+			console.log("Episode list before " + $this.episodeList)
 			let showData = [];
 
-			// Get show ID
-			//showID = popularShows["results"][shID]["id"];
-
-			// Get title of show
-			//title = popularShows["results"][shID]["name"];
 
 			GetTVID(tvid, function(info ,status) {
 				if (status != "success") {
@@ -128,16 +134,17 @@
 					return;
 				}
 
+				$this.tvSeriesObject = info;
+
 				GetTVID_Season(tvid, (info["seasons"].length-1), function(latestSeason ,status) {
 					if (status != "success") {
 						console.warn("Failed to recieve information from TMDB Api");
 						return;
 					}
 
-					//title = currentShow["name"]
 					let todaysDate = new Date();
 					let title = info["name"];
-					let seasonCount = info["seasons"].length;
+					let seasonCount = info["seasons"].length
 					let hasSpecials = false;
 					hasSpecials = info["seasons"][0]["name"] === "Specials";
 					let lastEpisodeAirDate = new Date(latestSeason["episodes"][latestSeason["episodes"].length - 1]["air_date"]);
@@ -156,6 +163,7 @@
 							}
 							let seasonIteration = response;
 							for (var j = 0; j < seasonIteration["episodes"].length; j++) {
+								$this.episodeList.push(seasonIteration["episodes"][j]);
 								showData.push([(i - (hasSpecials ? 1 : 0)) + ((0.8 / (seasonIteration["episodes"].length - 1)) * (j))+ 0.6]);
 								var v = hasSpecials ? 1 : 0;
 								for (v; v < i; v++) {
@@ -172,6 +180,7 @@
 							}
 						});
 					}
+					console.log("Episode count after: " + $this.episodeList);
 					google.charts.load('current', {
 						packages: ['corechart', 'line']
 					});
@@ -180,9 +189,6 @@
 					});
 				});
 			});
-
-			// tv/popular?page=1&language=en-US
-			// tv/{tv_id}/season/{season_number}&language=en-US
 
 			function draw(hasSpecials, seasonCount, showData, title) {
 				let dataTbl = new google.visualization.DataTable();
@@ -199,17 +205,15 @@
 					title: title,
 					height: 500,
 					chartArea: {'width' : '100%', 'height' : '80%', 'left' : '40', },
-					legend : {'position': 'bottom'},
-					seriesType : $this.sType,
+					legend: {'position': 'bottom' as 'bottom'},
+					seriesType: $this.sType,
 					explorer: {
 						actions: ['dragToZoom', 'rightClickToReset'],
 						axis: 'horizontal',
 						keepInBounds: true,
 						maxZoomIn: 7.0
-					}
-					//series: {8: {type: 'line'}},
+					} as google.visualization.ComboChartOptions
 				};
-
 				let chart = new google.visualization.ComboChart(document.getElementById('main-chart'));
 				chart.draw(dataTbl, options);
 			}
@@ -227,8 +231,6 @@
 		}
 
 		loadTVSeriesQuery_Click(): void {
-			let $this = this;
-
 			QueryTV(this.query, (queryResult: SeriesList.RootObject, s) => {
 				this.popularShows = queryResult.results;
 			});
@@ -236,63 +238,8 @@
 	};
 </script>
 
-
 <style scoped>
-	.container-map {
-		/* min-height: 400px;
-		max-height: 70vh;
-		display: flex;
-		flex-direction: column; */
+	.container {
 		max-height: 500px;
 	}
-
-	.quake-list {
-		/* min-height: 400px;
-		max-height: 70vh; */
-		overflow: auto;
-	}
 </style>
-
-<!-- 
-JS FEATURE STRUCTURE
-{
-  "type": "Feature",
-  "properties": {
-	"mag": 1.27,
-	"place": "10km ESE of Anza, CA",
-	"time": 1552912986020,
-	"updated": 1552913631400,
-	"tz": -480,
-	"url": "https://earthquake.usgs.gov/earthquakes/eventpage/ci38274015",
-	"detail": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/detail/ci38274015.geojson",
-	"felt": null,
-	"cdi": null,
-	"mmi": null,
-	"alert": null,
-	"status": "automatic",
-	"tsunami": 0,
-	"sig": 25,
-	"net": "ci",
-	"code": "38274015",
-	"ids": ",ci38274015,",
-	"sources": ",ci,",
-	"types": ",focal-mechanism,geoserve,nearby-cities,origin,phase-data,",
-	"nst": 52,
-	"dmin": 0.04138,
-	"rms": 0.17,
-	"gap": 49,
-	"magType": "ml",
-	"type": "earthquake",
-	"title": "M 1.3 - 10km ESE of Anza, CA"
-  },
-  "geometry": {
-	"type": "Point",
-	"coordinates": [
-	  -116.5658333,
-	  33.528,
-	  1.67
-	]
-  },
-  "id": "ci38274015"
-}
--->
