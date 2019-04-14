@@ -27,6 +27,10 @@
 
 
 				</div>
+				<div id="map">
+					<!-- Map -->
+					
+				</div>
 			</div>
 		</div>
 	</div>
@@ -35,7 +39,6 @@
 <script lang="ts">
 	import { Component, Emit, Inject, Model, Prop, Provide, Vue, Watch } from 'vue-property-decorator';
 	// import { } from '../../ts/API/Airquality';
-
 
 	@Component({})
 	export default class AirQuality extends Vue {
@@ -47,7 +50,7 @@
 		// ---------- Data ----------
 		/** Stores the user position (from the form input) */
 		Position: {lat: number, lng: number} = {lat: 0, lng: 0};
-
+		url:""
 		//
 		// ---------- Methods and Computed ----------
 		constructor() { 
@@ -55,9 +58,19 @@
 		} // Initialize data here if you cant above
 
 
-		mounted() { 
+		 mounted() { 
+			
+			
 			// You put your starting code in here
-
+			// let map = null;
+			// //when page loads this initial map will load data will be added later
+			// function initMap() {
+ 			// 	 map = new google.maps.Map(document.getElementById('map'), {
+   			// 	 zoom: 4,
+    		// 	center: new google.maps.LatLng(51.5, -0.11)
+    		// 	// mapTypeId: 'Terrain'   
+  			// });
+			// }
 			// What ever uses Position will be automatically updated with itm
 			// show me the current code you have 
 
