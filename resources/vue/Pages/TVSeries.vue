@@ -33,7 +33,7 @@
 							   aria-label="Show query" v-model="query">
 						<div class="input-group-append">
 							<button class="btn btn-outline-secondary" type="button" @click="loadTVSeriesQuery_Click()">
-								Load Show
+								Search
 							</button>
 						</div>
 					</div>
@@ -156,7 +156,7 @@
 							}
 							let seasonIteration = response;
 							for (var j = 0; j < seasonIteration["episodes"].length; j++) {
-								showData.push([(i - (hasSpecials ? 1 : 0)) + ((0.9 / (seasonIteration["episodes"].length - 1)) * (j))+ 0.55]);
+								showData.push([(i - (hasSpecials ? 1 : 0)) + ((0.8 / (seasonIteration["episodes"].length - 1)) * (j))+ 0.6]);
 								var v = hasSpecials ? 1 : 0;
 								for (v; v < i; v++) {
 									showData[episodeCount].push(null);
