@@ -5,8 +5,8 @@ import * as SeriesList from "SeriesList";
 import * as TVID from "TVID";
 import * as TVID_Season from "TVID_Season";
 
-function getAPIEndpoint(type) {
-	return `https://api.themoviedb.org/3/${type}api_key=${TMDB_API_KEY}`;
+function getAPIEndpoint(type, param) {
+	return `https://api.themoviedb.org/3/${type}api_key=${TMDB_API_KEY}${param}&language=en-US`;
 }
 
 /* /tv/{tv_id}>
@@ -2319,7 +2319,7 @@ export function GetHistoricWeather_Query(qry: String, date: Date,
 export function GetPopular(callback: ((tvseriesList: SeriesList.RootObject, s) => void), error: ((jqXHR, exception) => void) = null) {
 	$.ajax({
 		type: "GET",
-		url: `${getAPIEndpoint("tv/popular?")}`,
+		url: `${getAPIEndpoint("tv/popular?", "")}`,
 		data: {},
 		success: callback,
 		error: error,
@@ -2330,7 +2330,7 @@ export function GetPopular(callback: ((tvseriesList: SeriesList.RootObject, s) =
 export function GetTopRated(callback: ((tvseriesList: SeriesList.RootObject, s) => void), error: ((jqXHR, exception) => void) = null) {
 	$.ajax({
 		type: "GET",
-		url: `${getAPIEndpoint("tv/top_rated?")}`,
+		url: `${getAPIEndpoint("tv/top_rated?", "")}`,
 		data: {},
 		success: callback,
 		error: error,
@@ -2338,10 +2338,10 @@ export function GetTopRated(callback: ((tvseriesList: SeriesList.RootObject, s) 
 	});
 }
 
-export function GetTVID(showID: String, callback: ((tvSeason: TVID_Season.RootObject, s) => void), error: ((jqXHR, exception) => void) = null) {
+export function GetTVID(showID: number, callback: ((tvInformation: TVID.RootObject, s) => void), error: ((jqXHR, exception) => void) = null) {
 	$.ajax({
 		type: "GET",
-		url: `${getAPIEndpoint("tv/" + showID + "?")}`,
+		url: `${getAPIEndpoint("tv/" + showID + "?", "")}`,
 		data: {},
 		success: callback,
 		error: error,
@@ -2349,10 +2349,24 @@ export function GetTVID(showID: String, callback: ((tvSeason: TVID_Season.RootOb
 	});
 }
 
-export function GetTVID_Season(showID: String, season: number, callback: ((tvInformation: TVID.RootObject, s) => void), error: ((jqXHR, exception) => void) = null) {
+export function GetTVID_Season(showID: number, season: number, callback: ((tvSeason: TVID_Season.RootObject, s) => void), error: ((jqXHR, exception) => void) = null) {
 	$.ajax({
 		type: "GET",
-		url: `${getAPIEndpoint("tv/" + showID + "/season/" + season + "?")}`,
+		url: `${getAPIEndpoint("tv/" + showID + "/season/" + season + "?", "")}`,
+		data: {},
+		async: false,
+		success: callback,
+		error: error,
+		dataType: 'json',
+	});
+}
+
+// https://api.themoviedb.org/3/search/tv?api_key=<<api_key>>&language=en-US&query=hiiiiiiiiii&page=1
+
+export function QueryTV(query: string, callback: ((tvResults: SeriesList.RootObject, s) => void), error: ((jqXHR, exception) => void) = null) {
+	$.ajax({
+		type: "GET",
+		url: `${getAPIEndpoint("search/tv?", "&query=" + query)}`,
 		data: {},
 		success: callback,
 		error: error,

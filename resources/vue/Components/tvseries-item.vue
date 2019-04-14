@@ -43,7 +43,7 @@
 		beforeUpdated() {}
 
         onClick(): void {
-            this.tvSeries.loadShow(this.tvS);
+            this.tvSeries.loadShow(this.tvS["id"]);
         }
 
     }

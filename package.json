@@ -14,7 +14,9 @@
     "production": "node node_modules/cross-env/dist/bin/cross-env.js NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
   },
   "dependencies": {
+    "@types/d3": "^5.7.2",
     "@types/geojson": "^7946.0.6",
+    "@types/google.visualization": "0.0.46",
     "bootstrap": "^4.3.1",
     "cross-env": "^5.2.0",
     "gmaps-marker-clusterer": "^1.2.2",

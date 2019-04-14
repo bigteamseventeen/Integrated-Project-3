@@ -7,7 +7,6 @@ import Router from "vue-router";
 import * as VueGoogleMaps from "vue2-google-maps";
 import GmapCluster from 'vue2-google-maps/dist/components/cluster';
 import VueTimeago from 'vue-timeago'
-import VueGoogleCharts from 'vue-google-charts'
 
 //
 // Components
@@ -41,11 +40,6 @@ Vue.use(VueGoogleMaps, {
 		key: GMAPS_API_KEY,
 		libraries: ['places'], // Gmap libraries
 	},
-});
-
-Vue.use(VueGoogleCharts, {
-	name: 'GChart', // Component name, `GChart` by default
-	locale: 'en', 	 // Default locale
 });
 
 
