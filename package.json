@@ -14,11 +14,10 @@
     "production": "node node_modules/cross-env/dist/bin/cross-env.js NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
   },
   "dependencies": {
-    "@types/geojson": "^7946.0.6",
     "bootstrap": "^4.3.1",
     "cross-env": "^5.2.0",
     "gmaps-marker-clusterer": "^1.2.2",
-    "jquery": "latest",
+    "jquery": "^3.4.0",
     "laravel-mix": "^4.0.14",
     "lodash": "latest",
     "node-sass": "^4.11.0",
@@ -38,8 +37,10 @@
     "vue2-google-maps": "^0.10.6"
   },
   "devDependencies": {
+    "@types/geojson": "^7946.0.6",
     "@types/bootstrap": "^4.2.2",
     "@types/lodash": "^4.14.121",
-    "@types/googlemaps": "^3.30.16"
+    "@types/googlemaps": "^3.30.16",
+    "@types/google.visualization": "^0.0.46"
   }
 }

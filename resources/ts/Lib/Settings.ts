@@ -9,3 +9,6 @@ export const DOCUMENT_DEFAULT_TITLE = "BigTeamSeventeen: IP3";
 
 // The suffix of the website when there is a supplied title
 export const DOCUMENT_TITLE_SUFFIX = " - BTS:IP3";
+
+// https://www.themoviedb.org/documentation/api
+export const MOVIE_API_KEY = "0ff577cec03e7f3e1f3502ba86722414";
