@@ -47,14 +47,26 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Showing results for</h4>
+                        <img style="width: 185px;" :src="'https://image.tmdb.org/t/p/w185' + viewData.Poster_path">
                         <p>ID: {{viewData.ID}}</p>
                         <p>Title: {{viewData.Title}}</p>
                         <p>Vote Avg: {{viewData.voteAvg}}</p>
+                        <p>Description: {{viewData.Desc}}</p>
+                        <p>Gross: {{viewData.Gross}}</p>
+
                     </div>
+
+
                 </div>
             </div>
         </div>
+        <div class="col-md-4">
+        <!--<div class="card">
+            <img style="width: 185px" :src="'https://image.tmdb.org/t/p/w185' + viewData.Poster_path">
+        </div>-->
+        </div>
     </div>
+
 </template>
 
 <script lang="ts">
@@ -72,8 +84,8 @@
         formName: string = "Iron Man";
         formYear: Number = 2008;
         formViewBudget: boolean = false;
-        viewData: { Title: string, voteAvg: number, ID: number } = {
-          Title: "", voteAvg: 0, ID: 0
+        viewData: { Title: string, voteAvg: number, ID: number, Desc: string, Gross: number, Poster_path: string } = {
+          Title: "", voteAvg: 0, ID: 0, Desc: "", Gross: 0, Poster_path: ""
         };
 
         //
@@ -115,6 +127,11 @@
                     movies.viewData.ID = results[0].id;
                     movies.viewData.Title = results[0].title;
                     movies.viewData.voteAvg = results[0].vote_average;
+                    movies.viewData.Desc = results[0].overview;
+                    movies.viewData.Poster_path = results[0].poster_path;
+
+                    //movies.viewData.Poster = "https://image.tmdb.org/t/p/w185" + results[0].poster_path;
+
 
                     movies.findMovieDetails(results[0].id);
                 },
@@ -130,10 +147,11 @@
             let baseUrl = "https://api.themoviedb.org/3/movie/";
             let restUrl = "?language=en-UK&api_key=0ff577cec03e7f3e1f3502ba86722414";
             let url = "".concat(baseUrl, movieId, restUrl);
-
+            let movies = this;
             $.ajax({
                 url: url,
                 success: (searchResults) => {
+
                     console.log(searchResults);
                     instance.drawBarColours(searchResults);
                 },
@@ -146,6 +164,8 @@
         // Draw the bars in the chart
         drawBarColours({title, budget, revenue}): void {
             console.log({title, budget, revenue});
+
+            this.viewData.Gross = revenue - budget;
 
             let data: DataTable = null;
             if (this.formViewBudget) {
@@ -164,21 +184,40 @@
                 ]);
             }
 
-            let options = {
-                title: 'Revenue and Budget Comparison',
-                chartArea: {width: '50%'},
-                colors: ['#494940', '#ce310a'],
-                hAxis: {
-                    title: 'Money($)',
-                    minValue: 0
-                },
-                vAxis: {
-                    title: 'Movie'
-                }
-            };
+            if(budget > revenue) {
+                let options = {
+                    title: 'Revenue and Budget Comparison',
+                    chartArea: {width: '50%'},
+                    colors: ['#494940', '#ce310a'],
+                    hAxis: {
+                        title: 'Money($)',
+                        minValue: 0
+                    },
+                    vAxis: {
+                        title: 'Movie'
+                    }
+                };
+                let chart = new google.visualization.BarChart( this.$refs.chart as Element );
+                chart.draw(data, options);
+            }
+            else{
+                let options = {
+                    title: 'Revenue and Budget Comparison',
+                    chartArea: {width: '50%'},
+                    colors: ['#494940', '#2eb72c'],
+                    hAxis: {
+                        title: 'Money($)',
+                        minValue: 0
+                    },
+                    vAxis: {
+                        title: 'Movie'
+                    }
+                };
+                let chart = new google.visualization.BarChart( this.$refs.chart as Element );
+                chart.draw(data, options);
+            }
 
-            let chart = new google.visualization.BarChart( this.$refs.chart as Element );
-            chart.draw(data, options);
+
         }
     }
 </script>
