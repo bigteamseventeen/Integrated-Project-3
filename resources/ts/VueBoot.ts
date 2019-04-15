@@ -7,6 +7,7 @@ import Router from "vue-router";
 import * as VueGoogleMaps from "vue2-google-maps";
 import GmapCluster from 'vue2-google-maps/dist/components/cluster';
 import VueTimeago from 'vue-timeago'
+import VueMarkdown from 'vue-markdown'
 
 //
 // Components
@@ -32,6 +33,11 @@ import TestPage from "../vue/Pages/Test.vue";
 import AirqualityPage from "../vue/Pages/Airquality.vue";
 import WeatherPage from "../vue/Pages/Weather.vue";
 
+// 
+// Tutorial pages
+import TutorialListPage from "../vue/Tutorials/Tutorials.vue";
+import WeatherTutorial from "../vue/Tutorials/WeatherTutorial.vue";
+
 //
 // Setup the vue libraries
 Vue.use(Router);
@@ -47,6 +53,7 @@ Vue.use(VueTimeago, {
 	locale: 'en', 	 // Default locale
 });
 
+Vue.component('vue-markdown', VueMarkdown)
 Vue.component('GmapCluster', GmapCluster)
 
 //
@@ -60,7 +67,11 @@ const router = new Router({
 		{ path: '/pricing', name: 'pricing', component: Pricing, meta: { title: "Pricing" } },
 		{ path: '/weather', name: 'weather', component: WeatherPage, meta: { title: "Weather" } },
 		{ path: '/pollution', name: 'pollution', component: AirqualityPage, meta: { title: "Pollution levels" } },
-		{ path: '/test', name: 'test', component: TestPage, meta: { title: "Test Developer Page" } }
+		{ path: '/test', name: 'test', component: TestPage, meta: { title: "Test Developer Page" } },
+
+		{ path: '/tutorials', name: 'Tutorials', component: TutorialListPage, meta: { title: "Tutorials" } },
+		{ path: '/tutorials/weather', name: 'Weather Tutorial', component: WeatherTutorial, meta: { title: "Weather tutorial" } }
+		
 	],
 
 	linkActiveClass: "active",
