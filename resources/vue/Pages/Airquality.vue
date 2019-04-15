@@ -10,27 +10,35 @@
 						
 						<div class="form-group">
 						  <label>Latitude</label>
-						  <input v-model="Position.lat" type="text" class="form-control" aria-describedby="helpId" placeholder="Lat">
+						  <input v-model="FormPosition.lat" type="text" class="form-control" aria-describedby="helpId" placeholder="Lat">
 						  <small id="helpIdLat" class="form-text text-muted">Latitude (eg: 24.5321)</small>
 						</div>
 
 						<div class="form-group">
 						  <label>Longitude</label>
-						  <input v-model="Position.lng" type="text" class="form-control" aria-describedby="helpIdLng" placeholder="Lng">
+						  <input v-model="FormPosition.lng" type="text" class="form-control" aria-describedby="helpIdLng" placeholder="Lng">
 						  <small id="helpIdLng" class="form-text text-muted">Longitude (eg: 24.5321)</small>
 						</div>
+
+						<button class="btn btn-primary" @click="btnLoadAir_Click">Load air quality</button>
 					</div>
 				</div>
 				<br />
 				<div class="form">
-					<p> Selected location: {{Position.lat}},{{Position.lng}} </p>
-
-
+					<p> Selected location: {{Position.lat}},{{Position.lng}}</p>
 				</div>
-				<div id="map">
-					<!-- Map -->
-					
+				<div class="map-container">
+					<GmapMap ref="gmap" style="width:100%;height:100%;" :center="Position" :zoom="ZoomLevel">
+							<GmapMarker :key="index" v-for="(m, index) in markers"
+									:label="m.label"
+									:icon="m.icon"
+									:position="m.position"
+									:clickable="false"
+							></GmapMarker>
+
+					</GmapMap>
 				</div>
+				
 			</div>
 		</div>
 	</div>
@@ -39,6 +47,8 @@
 <script lang="ts">
 	import { Component, Emit, Inject, Model, Prop, Provide, Vue, Watch } from 'vue-property-decorator';
 	// import { } from '../../ts/API/Airquality';
+
+	import * as $ from "jquery";
 
 	@Component({})
 	export default class AirQuality extends Vue {
@@ -49,8 +59,13 @@
 		//
 		// ---------- Data ----------
 		/** Stores the user position (from the form input) */
-		Position: {lat: number, lng: number} = {lat: 0, lng: 0};
-		url:""
+		FormPosition: {lat: number, lng: number} = {lat: 55.8643, lng: -4.2550};
+		Position: {lat: number, lng: number} = {lat: 0, lng: 0}; // default pos
+		ZoomLevel: number = 4;
+		url:"";
+
+		markers: google.maps.Marker[] = [];
+
 		//
 		// ---------- Methods and Computed ----------
 		constructor() { 
@@ -58,24 +73,104 @@
 		} // Initialize data here if you cant above
 
 
-		 mounted() { 
-			
-			
-			// You put your starting code in here
-			// let map = null;
-			// //when page loads this initial map will load data will be added later
-			// function initMap() {
- 			// 	 map = new google.maps.Map(document.getElementById('map'), {
-   			// 	 zoom: 4,
-    		// 	center: new google.maps.LatLng(51.5, -0.11)
-    		// 	// mapTypeId: 'Terrain'   
-  			// });
-			// }
-			// What ever uses Position will be automatically updated with itm
-			// show me the current code you have 
-
+		mounted() { 
 		} // On Component Load, use instead of constructor!
 
 		beforeUpdated() { } // Before Render
+
+		// On form click
+		btnLoadAir_Click(): void {
+			this.Position = this.FormPosition;
+
+			console.log("Button click", this);
+			// this.map.setCenter(new google.maps.LatLng(this.FormPosition.lat, this.FormPosition.lng));
+
+			var lat = this.FormPosition.lat;
+			var long = this.FormPosition.lng;
+			$.ajax({
+				method: "GET",
+				url: "https://api.airvisual.com/v2/nearest_city?lat=" + lat + "&lon=" + long + "&key=Y8GFnuPkdWFTytAoP",
+				dataType: "json",
+				success: this.eqfeed_callback,
+				error: function (request, status, error) {
+					alert("Error requesting page. \nResponse from server: " + request.responseText);
+				}
+			});
+		}	
+
+		getCircle(magnitude) {
+			return {
+				path: google.maps.SymbolPath.CIRCLE,
+				fillColor: 'red',
+				fillOpacity: .2,
+				scale: Math.pow(2, magnitude) / 2,
+				strokeColor: 'white',
+				strokeWeight: .5
+			};
+		}
+
+
+		eqfeed_callback(results): void {
+			console.log("eqfeed_callback", results);
+
+			// for (var i = 0; i < results.data.length; i++) {
+			// the markers will be coloured using the rules
+			//green for 0 - 50, yellow 51 - 100, orange - 101 - 150, red - 151 - 200, lilac 201 - 250, purple 251 -300
+
+			//The valid range of latitude in degrees is -90 and +90 for the southern and northern hemisphere 
+			//Longitude is in the range -180 and +180
+			let coords = results.data.location.coordinates;
+			let latLng = new google.maps.LatLng(coords[1], coords[0]);
+			console.log(results.data.current.pollution.aqius);
+			
+			let aqi = results.data.current.pollution.aqius;
+			let color = '';
+			let txtColor = '';
+			
+			if (aqi <= 0 || aqi <= 50) {
+				color = 'green';
+				txtColor = 'white';
+			}
+			else if (aqi >= 51 && aqi <= 100) {
+				color = 'yellow';
+				txtColor = 'black';
+			}
+			else if (aqi >= 101 && aqi <= 150) {
+				color = 'orange';
+				txtColor = 'black';
+			}
+			else if (aqi >= 151 && aqi <= 200) {
+				color = '#ff1919';
+				txtColor = 'white';
+			}
+			else if (aqi >= 201 && aqi <= 250) {
+				color = '#b666d2';
+				txtColor = 'white';
+			}
+			else {
+				color = 'purple';
+			}
+
+			var label = aqi.toString();
+			console.log(aqi);
+
+			this.markers.push(new google.maps.Marker({
+				position: latLng,
+				label: {
+					text: label,
+					color: txtColor
+				},
+				icon: {
+					path: google.maps.SymbolPath.CIRCLE,
+					scale: 20,
+					fillColor: color,
+					fillOpacity: 1,
+					strokeColor: 'black',
+					strokeWeight: 0.5,
+					// labelContent: aqi
+				}
+				// label: aqi
+			}));
+		}
 	}
 </script>
