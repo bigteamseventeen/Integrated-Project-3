@@ -18,13 +18,13 @@
                         <h4 class="card-title">Enter film</h4>
                         <div class="form-group">
                             <input type="text" class="form-control" aria-describedby="helpIdName"
-                                   placeholder="Star Wars" v-model="formName">
+                                   placeholder="Iron Man" v-model="formName">
                             <small id="helpIdName" class="form-text text-muted">Enter a movie name</small>
                         </div>
 
                         <div class="form-group">
                             <input type="text" class="form-control" aria-describedby="helpIdYear"
-                                   placeholder="1998" v-model="formYear">
+                                   placeholder="2008" v-model="formYear">
                             <small id="helpIdYear" class="form-text text-muted">The year the movie was released</small>
                         </div>
 
@@ -43,17 +43,25 @@
                     </div>
                 </div>
             </div>
+            <!--<div class="col-auto">
+                <div class="card">
+                    <div class="card-body" style="width: 185px">
+                        <img style="width: 185px;" :src="'https://image.tmdb.org/t/p/w185' + viewData.Poster_path">
+                    </div>
+                </div>
+            </div>-->
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Showing results for</h4>
                         <img style="width: 185px;" :src="'https://image.tmdb.org/t/p/w185' + viewData.Poster_path">
-                        <p>ID: {{viewData.ID}}</p>
-                        <p>Title: {{viewData.Title}}</p>
-                        <p>Vote Avg: {{viewData.voteAvg}}</p>
-                        <p>Description: {{viewData.Desc}}</p>
-                        <p>Gross: {{viewData.Gross}}</p>
-
+                        <div style="vertical-align: text-top">
+                            <p>ID: {{viewData.ID}}</p>
+                            <p>Title: {{viewData.Title}}</p>
+                            <p>Average Rating: {{viewData.voteAvg}}</p>
+                            <p>Description: {{viewData.Desc}}</p>
+                            <p>Net: {{viewData.Net}}</p>
+                        </div>
                     </div>
 
 
@@ -84,8 +92,8 @@
         formName: string = "Iron Man";
         formYear: Number = 2008;
         formViewBudget: boolean = false;
-        viewData: { Title: string, voteAvg: number, ID: number, Desc: string, Gross: number, Poster_path: string } = {
-          Title: "", voteAvg: 0, ID: 0, Desc: "", Gross: 0, Poster_path: ""
+        viewData: { Title: string, voteAvg: number, ID: number, Desc: string, Net: number, Poster_path: string } = {
+          Title: "", voteAvg: 0, ID: 0, Desc: "", Net: 0, Poster_path: ""
         };
 
         //
@@ -106,6 +114,7 @@
 
         // Search Button click
         searchButton_Click(): void {
+            //used to hold the details of the movie in the search result
             let movies = this;
 
             let baseUrl = "https://api.themoviedb.org/3/search/movie?api_key=0ff577cec03e7f3e1f3502ba86722414&language=en-US&query=";
@@ -114,16 +123,19 @@
             let query = "&page=1&primary_release_year=";
             let urlString = "".concat(baseUrl, movieName, query, movieYear);
 
+            //if the user enters no details
             if (movieName == "" || this.formYear == 0) {
                 console.log("form not filled out");
                 return;
             }
 
+            //calling the api
             $.ajax({
                 url: urlString,
                 success: (searchResults) => {
                     let results: any = searchResults.results;
 
+                    //populating the fields on the site
                     movies.viewData.ID = results[0].id;
                     movies.viewData.Title = results[0].title;
                     movies.viewData.voteAvg = results[0].vote_average;
@@ -132,7 +144,7 @@
 
                     //movies.viewData.Poster = "https://image.tmdb.org/t/p/w185" + results[0].poster_path;
 
-
+                    //finds more details about the site
                     movies.findMovieDetails(results[0].id);
                 },
                 error: (xhr, status, err) => {
@@ -147,7 +159,9 @@
             let baseUrl = "https://api.themoviedb.org/3/movie/";
             let restUrl = "?language=en-UK&api_key=0ff577cec03e7f3e1f3502ba86722414";
             let url = "".concat(baseUrl, movieId, restUrl);
-            let movies = this;
+            //let movies = this;
+
+            //calls api using the above url
             $.ajax({
                 url: url,
                 success: (searchResults) => {
@@ -165,7 +179,11 @@
         drawBarColours({title, budget, revenue}): void {
             console.log({title, budget, revenue});
 
-            this.viewData.Gross = revenue - budget;
+            //displaying the net
+            this.viewData.Net = revenue - budget;
+            var net = revenue - budget;
+
+            if (net < 0) {
 
             let data: DataTable = null;
             if (this.formViewBudget) {
@@ -175,7 +193,8 @@
                     ['Movie', 'Budget', 'Revenue'],
                     [title, budget, revenue]
                 ]);
-            } else {
+            }
+            else {
                 console.log(google, google.visualization, google.visualization.arrayToDataTable);
 
                 data = google.visualization.arrayToDataTable([
@@ -183,12 +202,11 @@
                     [title, budget]
                 ]);
             }
-
-            if(budget > revenue) {
+                //When the movie makes a loss, the revenue bar is red
                 let options = {
                     title: 'Revenue and Budget Comparison',
                     chartArea: {width: '50%'},
-                    colors: ['#494940', '#ce310a'],
+                    colors: ['#494940', '#db0704'],
                     hAxis: {
                         title: 'Money($)',
                         minValue: 0
@@ -197,26 +215,43 @@
                         title: 'Movie'
                     }
                 };
-                let chart = new google.visualization.BarChart( this.$refs.chart as Element );
+                let chart = new google.visualization.BarChart(this.$refs.chart as Element);
                 chart.draw(data, options);
-            }
-            else{
-                let options = {
-                    title: 'Revenue and Budget Comparison',
-                    chartArea: {width: '50%'},
-                    colors: ['#494940', '#2eb72c'],
-                    hAxis: {
-                        title: 'Money($)',
-                        minValue: 0
-                    },
-                    vAxis: {
-                        title: 'Movie'
-                    }
-                };
-                let chart = new google.visualization.BarChart( this.$refs.chart as Element );
-                chart.draw(data, options);
-            }
 
+            }
+            else {
+                let data: DataTable = null;
+                if (this.formViewBudget) {
+                    console.log(google, google.visualization, google.visualization.arrayToDataTable);
+
+                    data = google.visualization.arrayToDataTable([
+                        ['Movie', 'Budget', 'Revenue', 'Net'],
+                        [title, budget, revenue, net]
+                    ]);
+                } else {
+                    console.log(google, google.visualization, google.visualization.arrayToDataTable);
+
+                    data = google.visualization.arrayToDataTable([
+                        ['Movie', 'Budget'],
+                        [title, budget]
+                    ]);
+                }
+                        let options = {
+                        title: 'Revenue and Budget Comparison',
+                        chartArea: {width: '50%'},
+                        colors: ['#494940', '#ffe500', '#2eb72c'],
+                        hAxis: {
+                            title: 'Money($)',
+                            minValue: 0
+                        },
+                        vAxis: {
+                            title: 'Movie'
+                        }
+                    };
+                    let chart = new google.visualization.BarChart(this.$refs.chart as Element);
+                    chart.draw(data, options);
+
+            }
 
         }
     }
