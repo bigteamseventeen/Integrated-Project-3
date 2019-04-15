@@ -38,7 +38,30 @@
 
 					</GmapMap>
 				</div>
-				
+				<div class="legend">
+					<table>
+						<tr>
+							<th>Colour</th>
+							<td><div class="green"></div></td>
+							<td><div class="yellow"></div></td>
+							<td><div class="orange"></div></td>
+							<td><div class="red"></div></td>
+							<td><div class="lilac"></div></td>
+							<td><div class="purple"></div></td>
+						</tr>
+					
+						<tr>
+							<th>Category</th>	
+							<td>good</td>
+							<td>moderate</td>
+							<td><br />unhealthy <br /> for sensitive <br /> groups</td>
+							<td>unhealthy</td>
+							<td>very unhealthy</td>
+							<td>hazardous</td>
+						</tr>
+						
+					</table>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -175,3 +198,45 @@
 		}
 	}
 </script>
+<style scoped>
+ .green{
+	 height: 50px;
+  width: 50px;
+  background-color: green;
+ }
+ .yellow{
+	 height: 50px;
+  width: 50px;
+  background-color: yellow;
+ }
+ .orange{
+	 height: 50px;
+  width: 50px;
+  background-color: orange;
+ }
+ .red{
+	 height: 50px;
+  width: 50px;
+  background-color: #ff1919;
+ }
+ .lilac{
+	 height: 50px;
+  width: 50px;
+  background-color: #b666d2;
+ }
+ .purple{
+	 height: 50px;
+  width: 50px;
+  background-color: purple;
+ }
+ th, td {
+  padding-right: 5%;
+  padding-top:5px;
+  text-align: left;
+}
+table{
+	margin-top:2%;
+	border: 1px solid black;
+}
+
+</style>
