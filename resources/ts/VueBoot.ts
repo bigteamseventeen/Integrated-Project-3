@@ -26,6 +26,7 @@ import Home from "../vue/Pages/Home.vue";
 import Map from "../vue/Pages/Map.vue";
 import Pricing from "../vue/Pages/Pricing.vue";
 import TestPage from "../vue/Pages/Test.vue";
+import StudentPage from "../vue/Pages/Student.vue";
 
 //
 // Setup the vue libraries
@@ -53,7 +54,8 @@ const router = new Router({
 		{ path: '/', name: 'home', component: Home, meta: {title: "Home" } },
 		{ path: '/map', name: 'map', component: Map, meta: {title: "Maps" } },
 		{ path: '/pricing', name: 'pricing', component: Pricing, meta: { title: "Pricing" } },
-		{ path: '/testing', name: 'test', component: TestPage, meta: { title: "Tests" } }
+		{ path: '/testing', name: 'test', component: TestPage, meta: { title: "Tests" } },
+		{ path: '/student', name: 'student', component: StudentPage, meta: { title: "Students" } }
 	],
 
 	linkActiveClass: "active",
