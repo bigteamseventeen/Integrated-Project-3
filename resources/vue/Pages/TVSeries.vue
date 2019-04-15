@@ -1,8 +1,8 @@
 <template>
-	<div class="container">
-		<div style="max-height:500px;">
-			<div class="row">
-				<div class="col-md-8">
+	<div class="container" style="min-height: 900px">
+		<div style="min-height: 560px;">
+			<div class="row" style="height: auto">
+				<div class="col-md-8 col-sm-12">
 					<nav class="navbar navbar-expand-md navigation-clean">
 						<div class="container"><h3>TV Series Visualizer</h3><button data-toggle="collapse" data-target="#navcol-1" class="navbar-toggler"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
 							<div class="collapse navbar-collapse"
@@ -27,7 +27,7 @@
 					</div>
 				</div>
 
-				<div class="col-md-4">
+				<div class="col-md-4 col-sm-12">
 					<div class="input-group mb-3">
 						<input name="txtLocation" type="text" class="form-control" placeholder="Enter show..."
 							   aria-label="Show query" v-model="query">
@@ -39,36 +39,34 @@
 					</div>
 					<div class="list-group" style="height: 500px; overflow: auto">
 						<tvseries-item v-for="(item,index) in popularShows"
-											 :key="index" :tvS="item" :tvSeries="self"></tvseries-item>
+									   :key="index" :tvS="item" :tvSeries="self"></tvseries-item>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="row" style="margin-bottom: 460px; margin-top: 80px" >
-			<div class="col-md-7">
-				<nav class="navbar navbar-light navbar-expand-md navigation-clean">
-					<div class="container">
-						<h4>Details</h4>
+		<div style="min-height: 500px">
+			<div class="row" style="height: auto" >
+				<div class="col-md-7 col-sm-12">
+					<nav class="navbar navbar-light navbar-expand-md navigation-clean">
+						<div class="container">
+							<h4>Episode Details</h4>
+						</div>
+					</nav>
+					<div class="d-block" style="max-height: 370px; overflow: auto">
+						<tvseries-show :tvS_E="tvSeriesObject" :tvSeries="self"></tvseries-show>
 					</div>
-				</nav>
-			</div>
-			<div class="col-md-5">
-			<nav class="navbar navbar-light navbar-expand-md navigation-clean">
-				<div class="container">
-					<h4>Episode List</h4>
 				</div>
-			</nav>
-			</div>
-			<div class="col-md-7">
-				<div class="d-block" style="max-height: 370px; overflow: auto">
-					<tvseries-show :tvS_E="tvSeriesObject" :tvSeries="self"></tvseries-show>
-				</div>
-			</div>
-			<div class="col-md-5">
-				<div class="list-group" style="max-height: 350px; overflow: auto">
-					<tvseries-episode v-for="(item,index) in episodeList"
-									  :key="index" :tvS="item" :tvSeries="self">
-					</tvseries-episode>
+				<div class="col-md-5 col-sm-12">
+					<nav class="navbar navbar-light navbar-expand-md navigation-clean">
+						<div class="container">
+							<h4>Episode List</h4>
+						</div>
+					</nav>
+					<div class="list-group" style="max-height: 350px; overflow: auto">
+						<tvseries-episode v-for="(item,index) in episodeList"
+										  :key="index" :tvS="item" :tvSeries="self">
+						</tvseries-episode>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -106,7 +104,7 @@
 			this.self = this;
 			this.loadShow(1399);
 			this.updateShowList();
-		 }
+		}
 
 		changeToScatter() : void {
 			let $this = this;
