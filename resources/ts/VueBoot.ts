@@ -27,12 +27,8 @@ import Home from "../vue/Pages/Home.vue";
 import Map from "../vue/Pages/Map.vue";
 import Pricing from "../vue/Pages/Pricing.vue";
 import TestPage from "../vue/Pages/Test.vue";
-<<<<<<< HEAD
-import TaxiPage from "../vue/Pages/Weather.vue";
 import AirqualityPage from "../vue/Pages/Airquality.vue";
-=======
 import WeatherPage from "../vue/Pages/Weather.vue";
->>>>>>> ad3d391c1f7f8e884d6b90de57b590c8f9c83d4b
 
 //
 // Setup the vue libraries
@@ -61,10 +57,7 @@ const router = new Router({
 		{ path: '/map', name: 'map', component: Map, meta: {title: "Maps" } },
 		{ path: '/pricing', name: 'pricing', component: Pricing, meta: { title: "Pricing" } },
 		{ path: '/weather', name: 'weather', component: WeatherPage, meta: { title: "Weather" } },
-		{ path: '/testing', name: 'test', component: TestPage, meta: { title: "Tests" } }
-
 		{ path: '/pollution', name: 'pollution', component: AirqualityPage, meta: { title: "Pollution levels" } },
-
 		{ path: '/test', name: 'test', component: TestPage, meta: { title: "Test Developer Page" } }
 	],
 

@@ -1,8 +1,8 @@
 <template>
 	<div class="container">
-		<div style="max-height:500px;">
-			<div class="row">
-				<div class="col-md-8"> 
+		<div style="min-height:500px;">
+			<div class="row" style="height: auto;">
+				<div class="col-md-8 col-sm-12"> 
 					<h3>Map of Earthquakes</h3>
 					<div>
 						<!-- Map -->
@@ -14,9 +14,9 @@
 	
 							<GmapCluster>
 								<GmapMarker :key="index" v-for="(m, index) in markers"
-											:label="m.label"
-											:position="m.position"
-											:clickable="true" @click="markerClick(index, m)"
+									:label="m.label"
+									:position="m.position"
+									:clickable="true" @click="markerClick(index, m)"
 								></GmapMarker>
 							</GmapCluster>
 						</GmapMap>
@@ -32,16 +32,17 @@
 					</div>		
 				</div>
 				
-				<div class="col-md-4">
+				<div class="col-md-4  col-sm-12">
 					<h3>Recent Earthquakes</h3>
 					
-					<div class="list-group" style="height: 500px; overflow: auto">
+					<div class="list-group" style="max-height: 500px; overflow: auto">
 						<map-earthquake-item v-for="(item,index) in recentEarthquakes"
 							:key="index" :eq="item" :map="self"></map-earthquake-item>
 					</div> 
 				</div>
 			</div>
 		</div>
+
 		<div v-if="selectedEarthquake != null" style="margin-top: 56px;">
 			
 			<h4 style="margin-bottom:20px; width:100%">

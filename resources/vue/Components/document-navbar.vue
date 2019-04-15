@@ -3,20 +3,12 @@
 		
 		<h5 class="my-0 mr-md-auto font-weight-normal">BigTeamSeventeen (Int3)</h5>
 		<nav class="my-2 my-md-0 mr-md-3">
-<<<<<<< HEAD
-				<router-link to="/" class="p-2 text-dark">Home</router-link>
-				<router-link to="/map" class="p-2 text-dark">Map</router-link>
-				<router-link to="/pricing" class="p-2 text-dark">Pricing</router-link>
-				<router-link to="/taxi" class="p-2 text-dark">Taxi Routes</router-link>
-				<router-link to="/testing" class="p-2 text-dark">Tests</router-link>
-				<router-link to="/pollution" class="p-2 text-dark">Air Quality</router-link>
-=======
 			<router-link to="/" class="p-2 text-dark">Home</router-link>
 			<router-link to="/map" class="p-2 text-dark">Map</router-link>
 			<router-link to="/pricing" class="p-2 text-dark">Pricing</router-link>
+			<router-link to="/pollution" class="p-2 text-dark">Air Quality</router-link>
 			<router-link to="/weather" class="p-2 text-dark">Weather</router-link>
 			<router-link to="/testing" class="p-2 text-dark">Tests</router-link>
->>>>>>> ad3d391c1f7f8e884d6b90de57b590c8f9c83d4b
 		</nav>
 	</div>
 </template>
