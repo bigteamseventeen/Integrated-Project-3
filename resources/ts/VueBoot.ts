@@ -14,12 +14,14 @@ import DocumentNavbar from "../vue/Components/document-navbar.vue"; // <document
 import DocumentFooter from "../vue/Components/document-footer.vue"; // <document-footer></document-footer> 
 import MapEarthquakeItem from "../vue/Components/map-earthquake-item.vue"; // <map-earthquake-item :eq="earthquake" :map="mapPagee"></map-earthquake-item> 
 import MapWeatherInformation from "../vue/Components/map-weather-information.vue"; // <map-weather-information :weather="w" :title="strTitle"></map-weather-information>
+import MapCountryInformation from "../vue/Components/map-country-information.vue"; // <map-country-information :basic="" :country=""></map-country-information>
 
 // tslint:disable-next-line: 
 Vue.component('document-navbar', DocumentNavbar);
 Vue.component('document-footer', DocumentFooter);
 Vue.component('map-earthquake-item', MapEarthquakeItem);
 Vue.component('map-weather-information', MapWeatherInformation);
+Vue.component('map-country-information', MapCountryInformation);
 
 //
 // Pages
