@@ -9,6 +9,8 @@
 								 id="navcol-1">
 								<ul class="nav navbar-nav ml-auto">
 									<li role="presentation" class="nav-item">
+										<a class="nav-link"  href="tvtutorial.html">Tutorial</a></li>
+									<li role="presentation" class="nav-item">
 										<a class="nav-link" @click="changeToLine();" href="#">Line</a></li>
 									<li role="presentation" class="nav-item">
 										<a class="nav-link" @click="changeToScatter();" href="#">Scatter</a></li>
