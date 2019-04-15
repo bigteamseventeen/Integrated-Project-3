@@ -26,18 +26,18 @@ Vue.component('map-country-information', MapCountryInformation);
 
 //
 // Pages
-import Home from "../vue/Pages/Home.vue";
-import Map from "../vue/Pages/Map.vue";
-import Pricing from "../vue/Pages/Pricing.vue";
+import HomePage from "../vue/Pages/Home.vue";
+import MapPage from "../vue/Pages/Map.vue";
+import PricingPage from "../vue/Pages/Pricing.vue";
 import TestPage from "../vue/Pages/Test.vue";
 import AirqualityPage from "../vue/Pages/Airquality.vue";
 import WeatherPage from "../vue/Pages/Weather.vue";
+import StudentPage from "../vue/Pages/Student.vue";
 
 // 
 // Tutorial pages
 import TutorialListPage from "../vue/Tutorials/Tutorials.vue";
 import WeatherTutorial from "../vue/Tutorials/WeatherTutorial.vue";
-import StudentPage from "../vue/Pages/Student.vue";
 
 //
 // Setup the vue libraries
@@ -63,9 +63,9 @@ const router = new Router({
 	mode: "hash",
 
 	routes: [
-		{ path: '/', name: 'home', component: Home, meta: {title: "Home" } },
-		{ path: '/map', name: 'map', component: Map, meta: {title: "Maps" } },
-		{ path: '/pricing', name: 'pricing', component: Pricing, meta: { title: "Pricing" } },
+		{ path: '/', name: 'home', component: HomePage, meta: {title: "Home" } },
+		{ path: '/map', name: 'map', component: MapPage, meta: {title: "Maps" } },
+		{ path: '/pricing', name: 'pricing', component: PricingPage, meta: { title: "Pricing" } },
 		{ path: '/weather', name: 'weather', component: WeatherPage, meta: { title: "Weather" } },
 		{ path: '/pollution', name: 'pollution', component: AirqualityPage, meta: { title: "Pollution levels" } },
 		{ path: '/student', name: 'student', component: StudentPage, meta: { title: "Students" } },
