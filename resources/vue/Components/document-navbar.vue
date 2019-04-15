@@ -8,6 +8,7 @@
 			<router-link to="/pricing" class="p-2 text-dark">Pricing</router-link>
 			<router-link to="/pollution" class="p-2 text-dark">Air Quality</router-link>
 			<router-link to="/weather" class="p-2 text-dark">Weather</router-link>
+			<router-link to="/student" class="p-2 text-dark">Students</router-link>
 			<router-link to="/tutorials" class="p-2 text-dark">Tutorials</router-link>
 		</nav>
 	</div>
