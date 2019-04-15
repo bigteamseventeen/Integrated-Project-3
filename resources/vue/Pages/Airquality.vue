@@ -121,6 +121,7 @@
 			//Longitude is in the range -180 and +180
 			let coords = results.data.location.coordinates;
 			let latLng = new google.maps.LatLng(coords[1], coords[0]);
+			this.Position = {lat: coords[1], lng: coords[0]};
 			console.log(results.data.current.pollution.aqius);
 			
 			let aqi = results.data.current.pollution.aqius;
@@ -169,7 +170,7 @@
 					strokeWeight: 0.5,
 					// labelContent: aqi
 				}
-				// label: aqi
+				
 			}));
 		}
 	}
