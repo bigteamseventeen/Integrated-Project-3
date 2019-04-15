@@ -16,6 +16,7 @@ import DocumentFooter from "../vue/Components/document-footer.vue"; // <document
 import MapEarthquakeItem from "../vue/Components/map-earthquake-item.vue"; // <map-earthquake-item :eq="earthquake" :map="mapPagee"></map-earthquake-item> 
 import MapWeatherInformation from "../vue/Components/map-weather-information.vue"; // <map-weather-information :weather="w" :title="strTitle"></map-weather-information>
 import MapCountryInformation from "../vue/Components/map-country-information.vue"; // <map-country-information :basic="" :country=""></map-country-information>
+import TVSeriesItem from "../vue/Components/tvseries-item.vue"; // <map-weather-information :weather="w" :title="strTitle"></map-weather-information>
 
 // tslint:disable-next-line: 
 Vue.component('document-navbar', DocumentNavbar);
@@ -23,6 +24,7 @@ Vue.component('document-footer', DocumentFooter);
 Vue.component('map-earthquake-item', MapEarthquakeItem);
 Vue.component('map-weather-information', MapWeatherInformation);
 Vue.component('map-country-information', MapCountryInformation);
+Vue.component('tvseries-item', TVSeriesItem);
 
 //
 // Pages
@@ -33,6 +35,7 @@ import TestPage from "../vue/Pages/Test.vue";
 import AirqualityPage from "../vue/Pages/Airquality.vue";
 import WeatherPage from "../vue/Pages/Weather.vue";
 import StudentPage from "../vue/Pages/Student.vue";
+import TVSeries from "../vue/Pages/TVSeries.vue";
 
 // 
 // Tutorial pages
@@ -49,6 +52,7 @@ Vue.use(VueGoogleMaps, {
 	},
 });
 
+
 Vue.use(VueTimeago, {
 	name: 'Timeago', // Component name, `Timeago` by default
 	locale: 'en', 	 // Default locale
@@ -63,12 +67,13 @@ const router = new Router({
 	mode: "hash",
 
 	routes: [
-		{ path: '/', name: 'home', component: HomePage, meta: {title: "Home" } },
+		{ path: '/', name: 'home', component: MapPage, meta: {title: "Home" } },
 		{ path: '/map', name: 'map', component: MapPage, meta: {title: "Maps" } },
 		{ path: '/pricing', name: 'pricing', component: PricingPage, meta: { title: "Pricing" } },
 		{ path: '/weather', name: 'weather', component: WeatherPage, meta: { title: "Weather" } },
 		{ path: '/pollution', name: 'pollution', component: AirqualityPage, meta: { title: "Pollution levels" } },
 		{ path: '/student', name: 'student', component: StudentPage, meta: { title: "Students" } },
+		{ path: '/tvseries', name: 'tvseries', component: TVSeries, meta: { title: "TV Series" } },
 
 		{ path: '/tutorials', name: 'Tutorials', component: TutorialListPage, meta: { title: "Tutorials" } },
 		{ path: '/tutorials/weather', name: 'Weather Tutorial', component: WeatherTutorial, meta: { title: "Weather tutorial" } }
