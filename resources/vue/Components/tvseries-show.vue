@@ -8,7 +8,7 @@
                 <p class="mb-1" style="font-size: 14px;">Last Aired: <strong>{{tvS_E.last_air_date}}</strong></p>
                 <p class="mb-1" style="font-size: 14px;">Overview: <strong>{{tvS_E.overview}}</strong></p>
             </div>
-            <div class="p-1">
+            <div class="p-1 showimage">
                 <img style="height: 320px" :src="'https://image.tmdb.org/t/p/w500' + tvS_E.poster_path">
             </div>
         </div>
@@ -42,9 +42,16 @@
     }
 </script>
 
-<style lang="sass" scoped>
+<style lang="css" scoped>
 
-    .tvseries
-        cursor: pointer
+    .tvseries {
+        cursor: pointer;
+    }
+
+    @media only screen and (max-width: 700px) {
+        .showimage {
+            display: none;
+        }
+    }
 
 </style>
