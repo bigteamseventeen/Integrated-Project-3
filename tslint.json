@@ -4,7 +4,7 @@
         "tslint:recommended"
     ],
     "jsRules": {
-        "quotemark": false
+        "quotemark": false,
     },
     "rules": {
         "quotemark": false,
