@@ -50,7 +50,7 @@
 		day: string;
 		date: Date;
 		date_epoch: number;
-
+	
 		constructor(weather: WeatherAPIResponse, day: string, date: Date) {
 			this.weather = weather;
 			this.day = day;
