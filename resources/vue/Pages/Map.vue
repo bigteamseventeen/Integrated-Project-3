@@ -32,7 +32,7 @@
 					</div>		
 				</div>
 				
-				<div class="col-md-4  col-sm-12">
+				<div class="col-md-4 col-sm-12">
 					<h3>Recent Earthquakes</h3>
 					
 					<div class="list-group" style="max-height: 500px; overflow: auto">
@@ -44,10 +44,15 @@
 		</div>
 
 		<div v-if="selectedEarthquake != null" style="margin-top: 56px;">
-			
 			<h4 style="margin-bottom:20px; width:100%">
 				{{selectedEarthquake.properties.title}}
 				<div class="float-right">
+					<a :href="selectedEarthquake.properties.url">
+						<button class="btn btn-outline-warn">
+							View more information at USGS.gov
+						</button>
+					</a>
+
 					<button class="btn btn-outline-primary" @click="selectedEarthquake = null;">
 						<i class="fa fa-remove" aria-hidden="true"></i>
 						Clear Active Selection
@@ -55,23 +60,44 @@
 				</div>
 			</h4>
 
-			<div class="row" >
-				<div class="col-md-4">
-					<div style="font-weight: bold;">Earthquake Information</div>
-					<div><p>Earthquake Time: {{getFullDateString(selectedEarthquake.properties.time)}} </p></div>
-					<small><timeago :datetime="selectedEarthquake.properties.time" :auto-update="60"></timeago></small>
+			<div class="row" style="width:100%;">
+				<div class="col-lg-4 col-xs-12">
+					<div class="card" style="height: 240px">
+						<div class="card-body">
+							<h4 class="card-title">Earthquake Information</h4>
+							<div><p>Earthquake Time: {{getFullDateString(selectedEarthquake.properties.time)}} </p></div>
+							<small><timeago :datetime="selectedEarthquake.properties.time" :auto-update="60"></timeago></small>
+						</div>
+					</div>
 				</div>
 
-				<div class="col-md-4">
-					<map-weather-information :weather="historicWeather" :title="strHistoricWeather" :map="self"></map-weather-information>
+				<div class="col-lg-4 col-xs-12">
+					<div class="card" style="height: 240px">
+						<div class="card-body">
+							<map-weather-information :weather="historicWeather" :title="strHistoricWeather" :map="self"></map-weather-information>
+						</div>
+					</div>
 				</div>
 
-				<div class="col-md-4">
-					<map-weather-information :weather="currentWeather" :title="strCurrentWeather" :map="self"></map-weather-information>
+				<div class="col-lg-4 col-xs-12">
+					<div class="card" style="height: 240px">
+						<div class="card-body">
+							<map-weather-information :weather="currentWeather" :title="strCurrentWeather" :map="self"></map-weather-information>
+						</div>
+					</div>
 				</div>
 			</div>
 			
 			<a :href="selectedEarthquake.properties.url">View more details at USGS.gov</a>
+		</div>
+
+		<div v-if="selectedEarthquake != null">
+			<div v-if="basicCountry != null && fullCountry != null" style="margin-top: 20px;">
+				<map-country-information :country="fullCountry" :basic="basicCountry"></map-country-information>
+			</div>
+			<div v-else>
+				<b>We failed to load the information required to show country statistics</b>
+			</div>
 		</div>
 	</div>
 </template>
@@ -82,6 +108,8 @@
 
 	import { GetEarthQuakes, EQDateSpan, EQSignificance } from '../../ts/API/EarthQuakes';
 	import { GetCurrentWeather, WeatherAPIResponse, GetHistoricWeather } from "../../ts/API/Weather";
+	import { GetCountryFromLatLng, GetCountryInformationFromCode, CountryInformation, BasicCountryInformation } from "../../ts/API/Geonames";
+
 	import MapEarthquakeItem from '../Components/map-earthquake-item.vue';
 
 	class InfomationWindow {
@@ -131,6 +159,9 @@
 		historicWeather: WeatherAPIResponse = null;
 		selectedEarthquake: Feature = null;
 
+		basicCountry: BasicCountryInformation = null;
+		fullCountry: CountryInformation = null;
+
 		//
 		// ---------- Methods and Computed ----------
 		constructor() { 
@@ -141,7 +172,7 @@
 			this.updateRecentEarthquakes();
 		 } // Initialize data here if you cant above
 
-		async mounted() { 
+		async mounted() {
 			this.geolocate();
 
 			let $this = this;
@@ -233,6 +264,7 @@
 				lng: earthquake.geometry["coordinates"][0]
 			};
 
+			this.loadCountryInformation(earthquake);
 			this.infoWindow.Position = this.center;
 			this.infoWindow.Content = earthquake.properties.title + "<br><small>" 
 				+ new Date(earthquake.properties.time) + "</small>";
@@ -259,6 +291,47 @@
 					"Wednesday", "Thursday", "Friday", 
 					"Saturday" ])[date.getDay()] + 
 				" " + date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear();
+		}
+
+		loadCountryInformation(earthquake: Feature): void {
+			let $this = this;
+			this.basicCountry = null;
+			this.fullCountry = null;
+
+			// Geolocate the information
+			GetCountryFromLatLng({
+				lat: earthquake.geometry["coordinates"][1],
+				lng: earthquake.geometry["coordinates"][0]
+			}, (response, status) => {
+				$this.basicCountry = response;
+
+				// Country information
+				console.log("Basic country information", response, status);
+
+				if (response.status != null && response.status.message == "no country code found") {
+					alert("failed to find a country code for the specified location");
+					return;
+				}
+
+				// Get the advanced country information
+				GetCountryInformationFromCode(response.countryCode, (country,s) => {
+					$this.fullCountry = country;
+
+					console.log("Advanced country info", country);
+
+					$this.infoWindow.Content += "<br>";
+					$this.infoWindow.Content += `<b>${country.name}</b>`;
+
+					let wind = `<div style="float:left;"><img src="${country.flag}" width="100"></img></div><div style="margin: 5px; float:right;">` + $this.infoWindow.Content + "</div>";
+					$this.infoWindow.Content = wind;
+				}, (er,ex) => {
+					alert("Failed to load advanced country information for country code: " + response.countryCode);
+					console.error(ex);
+				});
+			}, (error, exception) => {
+				// Error handling
+				alert("Failed to get country for lat lng");
+			});
 		}
 	};
 </script>

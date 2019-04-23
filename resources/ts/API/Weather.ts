@@ -5,7 +5,7 @@ function getAPIEndpoint(type) {
 	return `http://api.apixu.com/v1/${type}.json?key=${APIXU_API_KEY}`;
 }
 
-interface LatLong { lat: number, lng: number }
+export interface LatLong { lat: number, lng: number }
 
 // http://api.apixu.com/v1/current.json?key=YOUR-APIXU-KEY&q=' + lat.toFixed(4) + ',' + lng.toFixed(4)
 export function GetCurrentWeather(location: LatLong, 
