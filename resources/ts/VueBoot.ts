@@ -36,11 +36,17 @@ import AirqualityPage from "../vue/Pages/Airquality.vue";
 import WeatherPage from "../vue/Pages/Weather.vue";
 import StudentPage from "../vue/Pages/Student.vue";
 import TVSeries from "../vue/Pages/TVSeries.vue";
+import MoviesPage from "../vue/Pages/Movies.vue";
 
 // 
 // Tutorial pages
 import TutorialListPage from "../vue/Tutorials/Tutorials.vue";
 import WeatherTutorial from "../vue/Tutorials/WeatherTutorial.vue";
+import MoviesTutorial from "../vue/Tutorials/MoviesTutorial.vue";
+import TvSeriesTutorial from "../vue/Tutorials/TVSeriesTutorial.vue";
+import EarthquakesTutorial from "../vue/Tutorials/EarthquakesTutorial.vue";
+import StudentsTutorial from "../vue/Tutorials/StudentsTutorial.vue";
+
 
 //
 // Setup the vue libraries
@@ -74,9 +80,15 @@ const router = new Router({
 		{ path: '/pollution', name: 'pollution', component: AirqualityPage, meta: { title: "Pollution levels" } },
 		{ path: '/student', name: 'student', component: StudentPage, meta: { title: "Students" } },
 		{ path: '/tvseries', name: 'tvseries', component: TVSeries, meta: { title: "TV Series" } },
+		{ path: '/movies', name: 'movies', component: MoviesPage, meta: {title: "Movies", author: "Marc" } },
 
-		{ path: '/tutorials', name: 'Tutorials', component: TutorialListPage, meta: { title: "Tutorials" } },
-		{ path: '/tutorials/weather', name: 'Weather Tutorial', component: WeatherTutorial, meta: { title: "Weather tutorial" } }
+		{ path: '/tutorials', name: 'tutorials', component: TutorialListPage, meta: { title: "Tutorials" } },
+		{ path: '/tutorials/weather', name: 'weatherTutorial', component: WeatherTutorial, meta: { title: "Weather tutorial" } },
+		{ path: '/tutorials/movies', name: 'moviesTutorial', component: MoviesTutorial, meta: { title: "Movies tutorial" } },
+		{ path: '/tutorials/tvseries', name: 'tvSeriesTutorial', component: TvSeriesTutorial, meta: { title: "TV Series tutorial" } },
+		{ path: '/tutorials/earthquakes', name: 'EarthquakesTutorial', component: EarthquakesTutorial, meta: { title: "Earthquake tutorial" } },
+		{ path: '/tutorials/students', name: 'studentsTutorial', component: StudentsTutorial, meta: { title: "TV Series tutorial" } }
+
 	],
 
 	linkActiveClass: "active",

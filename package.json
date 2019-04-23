@@ -17,11 +17,8 @@
     "bootstrap": "^4.3.1",
     "cross-env": "^5.2.0",
     "gmaps-marker-clusterer": "^1.2.2",
-    "highlightjs": "^9.12.0",
-    "jquery": "latest",
-    "laravel-mix": "^4.0.14",
+    "jquery": "^3.4.0",
     "lodash": "latest",
-    "node-sass": "^4.11.0",
     "npm-watch": "^0.6.0",
     "pug": "^2.0.3",
     "resolve-url-loader": "^2.3.1",
@@ -39,12 +36,12 @@
     "vue2-google-maps": "^0.10.6"
   },
   "devDependencies": {
+    "@types/geojson": "^7946.0.6",
     "@types/bootstrap": "^4.2.2",
     "@types/googlemaps": "^3.30.16",
-    "@types/geojson": "^7946.0.6",
+    "@types/google.visualization": "0.0.46",
     "@types/lodash": "^4.14.121",
     "@types/d3": "^5.7.2",
-    "@types/google.visualization": "0.0.46",
     "@types/morris.js": "0.5.6"
   }
 }

@@ -96,7 +96,7 @@
 				<map-country-information :country="fullCountry" :basic="basicCountry"></map-country-information>
 			</div>
 			<div v-else>
-				<b>We failed to load the information required to show country statistics</b>
+				<b style="padding-bottom: 50px;">We failed to load the information required to show country statistics</b>
 			</div>
 		</div>
 	</div>
@@ -168,7 +168,6 @@
 			super();
 
 			this.self = this;
-			console.log("Constructor");
 			this.updateRecentEarthquakes();
 		 } // Initialize data here if you cant above
 

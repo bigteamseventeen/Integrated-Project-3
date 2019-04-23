@@ -1,5 +1,5 @@
 <template>
-	<div class="container">
+	<div class="container" style="margin: 10px;">
 		<h1>Table of Contents</h1>
 		<div v-html="tocHtml" style="margin-bottom: 50px;"></div>
 
@@ -201,22 +201,18 @@ Using that information you can create websites making use of weather statistics.
 
 <script lang="ts">
 	import { Component, Emit, Inject, Model, Prop, Provide, Vue, Watch } from 'vue-property-decorator';
+    declare var Prism: any;
 
 	@Component({})
-	export default class TutorialsListPage extends Vue {
-
+	export default class WeatherTutorial extends Vue {
 		tocHtml: string = "";
-
-		mounted() {
-			console.log("mounted");
+		tocRenderered(tocHtml: string) {
+			this.tocHtml = tocHtml;
 		}
 
 		updated() {
-			console.log("updated");
-		}
-
-		tocRenderered(tocHtml: string) {
-			this.tocHtml = tocHtml;
+			console.log("updated!");
+			Prism.highlightAll();
 		}
 	}
 </script>
