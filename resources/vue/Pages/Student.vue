@@ -10,6 +10,8 @@
 	import { Component, Emit, Inject, Model, Prop, Provide, Vue, Watch } from 'vue-property-decorator';
     import * as $ from "jquery";
 
+    declare var Morris: any;
+
 	@Component({})
 	export default class extends Vue {
 		//

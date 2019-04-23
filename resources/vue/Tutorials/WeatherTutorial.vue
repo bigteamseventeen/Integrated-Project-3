@@ -1,6 +1,9 @@
 <template>
 	<div class="container">
-        <vue-markdown>
+		<h1>Table of Contents</h1>
+		<div v-html="tocHtml" style="margin-bottom: 50px;"></div>
+
+<vue-markdown :toc="true" v-on:toc-rendered="tocRenderered">
 # How to parse and read information from APIXU for Weather
 
 ## How to register for the service(s)
@@ -12,7 +15,7 @@ Inside the [docs](docs) you will get the documentation for the api, like calls f
 
 ## Wrapping the API into useful interfaces
 After we have gained access to the API we can make a call and see what the returned JSON file is 
-```json
+```js
 {
 	"location":{
 		"name":"Petersville",
@@ -58,7 +61,7 @@ After we have gained access to the API we can make a call and see what the retur
 
 By taking this json file we can then turn it into a collection of interfaces, this process can be automated through tools in an code editor like visual studio code, the command is `> Convert json clipboard to TypeScript interfaces`. After doing that you will get a generated list of responses, you will want to go through this and manually check if the data is correct and rename any class names that don't make sense.
 
-```ts
+```js
 export interface Astro {
 	moonrise: string; //"08:10 AM"
 	moonset: string; // "11:50 PM"
@@ -143,7 +146,7 @@ The pattern for the requests for the api is `http://api.apixu.com/v1/{type}.json
 | key  | This is the user's api key that we had gotten earlier, this will allow us to authenticate with the server |
 | ...  | These are any additional arguments defined for the api call                                               |
 
-```ts
+```js
 const APIXU_API_KEY = "...";
 function getAPIEndpoint(type) {
 	return `http://api.apixu.com/v1/${type}.json?key=${APIXU_API_KEY}`;
@@ -182,7 +185,7 @@ export function GetCurrentWeather_Query(qry: string,
 ```
 
 And we can call the function like this 
-```ts
+```js
 // this.center = {lat: -21, lng: 20}
 GetCurrentWeather(this.center, (weather, status) => {
 	console.log("Current Weather: ", status, weather);
@@ -192,7 +195,7 @@ GetCurrentWeather(this.center, (weather, status) => {
 ```
 
 Using that information you can create websites making use of weather statistics.
-        </vue-markdown>
+</vue-markdown>
 	</div>
 </template>
 
@@ -200,5 +203,20 @@ Using that information you can create websites making use of weather statistics.
 	import { Component, Emit, Inject, Model, Prop, Provide, Vue, Watch } from 'vue-property-decorator';
 
 	@Component({})
-	export default class TutorialsListPage extends Vue { }
+	export default class TutorialsListPage extends Vue {
+
+		tocHtml: string = "";
+
+		mounted() {
+			console.log("mounted");
+		}
+
+		updated() {
+			console.log("updated");
+		}
+
+		tocRenderered(tocHtml: string) {
+			this.tocHtml = tocHtml;
+		}
+	}
 </script>
