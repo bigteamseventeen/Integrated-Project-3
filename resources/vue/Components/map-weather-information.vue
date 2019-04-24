@@ -34,9 +34,6 @@
 		// ---------- Properties ----------
         @Prop() /** Earthquake */
         weather: WeatherAPIResponse; 
-
-        @Prop() 
-		map: Maps;
 		
 		@Prop()
 		title: string;
@@ -55,7 +52,13 @@
 		beforeUpdated() {}
     
         getFullDateString(time: any): string {
-            return this.map.getFullDateString(time);
+            let date = new Date(time);
+
+			return date.toLocaleTimeString() + ", " + 
+				([	"Sunday", "Monday", "Tuesday", 
+					"Wednesday", "Thursday", "Friday", 
+					"Saturday" ])[date.getDay()] + 
+				" " + date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear();
         }
     }
 </script>

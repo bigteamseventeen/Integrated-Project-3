@@ -1,12 +1,12 @@
 <template>
-	<div class="container" style="margin: 10px;">
+	<div class="container" style="padding: 10px;">
 		<h1>Table of Contents</h1>
 		<div v-html="tocHtml" style="margin-bottom: 50px;"></div>
 
 <vue-markdown :toc="true" v-on:toc-rendered="tocRenderered">
-# How to parse and read information from APIXU for Weather
+# 1. How to parse and read information from APIXU for Weather
 
-## How to register for the service(s)
+## 1.1. How to register for the service(s)
 For the weather API we used the APIXU service, that allowed us to get gather weather and get a forecast for a given Lat, Long. This allows us to forecast an area from a map or a pre-specified location.
 
 To register for this service head over to the [official website and register](https://www.apixu.com/). After registering and confirming your website you can get visit the documentation and get your api key from [the api page](https://www.apixu.com/api.aspx).
@@ -137,7 +137,7 @@ export interface WeatherAPIForecastResponse {
 export interface LatLong { lat: number, lng: number }
 ```
 
-## Calling the API
+## 1.2. Calling the API
 Now that we can parse information from the API with help of your selected text editor's language server, We will want to call the API functions. To do that we will refer to the docs and create a function that will wrap up the ajax request.
 
 The pattern for the requests for the api is `http://api.apixu.com/v1/{type}.json?key={key}&{...}`. 
@@ -195,6 +195,17 @@ GetCurrentWeather(this.center, (weather, status) => {
 ```
 
 Using that information you can create websites making use of weather statistics.
+
+For our usage we had just created a for each of the custom html component `map-weather-information` like this
+```html
+&lt;map-weather-information :title=&quot;fc.day&quot; :weather=&quot;fc.weather&quot;&gt;&lt;/map-weather-information&gt;
+```
+`:title` Sets the title of the card and
+
+`:weather` Sets the weather object that the component will then render.
+
+
+
 </vue-markdown>
 	</div>
 </template>
@@ -211,7 +222,6 @@ Using that information you can create websites making use of weather statistics.
 		}
 
 		updated() {
-			console.log("updated!");
 			Prism.highlightAll();
 		}
 	}
