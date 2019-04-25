@@ -30,6 +30,7 @@ Vue.component('tvseries-item', TVSeriesItem);
 // Pages
 import HomePage from "../vue/Pages/Home.vue";
 import MapPage from "../vue/Pages/Map.vue";
+import AuthorsPage from "../vue/Pages/Authors.vue";
 import PricingPage from "../vue/Pages/Pricing.vue";
 import TestPage from "../vue/Pages/Test.vue";
 import AirqualityPage from "../vue/Pages/Airquality.vue";
@@ -37,6 +38,7 @@ import WeatherPage from "../vue/Pages/Weather.vue";
 import StudentPage from "../vue/Pages/Student.vue";
 import TVSeries from "../vue/Pages/TVSeries.vue";
 import MoviesPage from "../vue/Pages/Movies.vue";
+import MapCountryInfo from "../vue/Pages/MapCountryInfo.vue";
 
 // 
 // Tutorial pages
@@ -46,7 +48,10 @@ import MoviesTutorial from "../vue/Tutorials/MoviesTutorial.vue";
 import TvSeriesTutorial from "../vue/Tutorials/TVSeriesTutorial.vue";
 import EarthquakesTutorial from "../vue/Tutorials/EarthquakesTutorial.vue";
 import StudentsTutorial from "../vue/Tutorials/StudentsTutorial.vue";
+import AirQualityPage from "../vue/Tutorials/AirQualityTutorial.vue";
 
+import GeoJSONTutorial from "../vue/Tutorials/GeoJSONTutorial.vue";
+import JavascriptTechniquesTutorial from "../vue/Tutorials/JavascriptTechniques.vue";
 
 //
 // Setup the vue libraries
@@ -73,22 +78,31 @@ const router = new Router({
 	mode: "hash",
 
 	routes: [
-		{ path: '/', name: 'home', component: MapPage, meta: {title: "Home" } },
+	// ------
+		{ path: '/', name: 'home', component: HomePage, meta: {title: "Home" } },
+		{ path: '/authors', name: 'authors', component: AuthorsPage, meta: {title: "Authors" } },
+
+	// ------ Pages
 		{ path: '/map', name: 'map', component: MapPage, meta: {title: "Maps" } },
-		{ path: '/pricing', name: 'pricing', component: PricingPage, meta: { title: "Pricing" } },
+		{ path: '/map/:lat/:lng/:time', name: 'countryInfo', component: MapCountryInfo, meta: { title: "Country information" } },
 		{ path: '/weather', name: 'weather', component: WeatherPage, meta: { title: "Weather" } },
 		{ path: '/pollution', name: 'pollution', component: AirqualityPage, meta: { title: "Pollution levels" } },
 		{ path: '/student', name: 'student', component: StudentPage, meta: { title: "Students" } },
 		{ path: '/tvseries', name: 'tvseries', component: TVSeries, meta: { title: "TV Series" } },
 		{ path: '/movies', name: 'movies', component: MoviesPage, meta: {title: "Movies", author: "Marc" } },
 
+	// ------ Tutorials 
 		{ path: '/tutorials', name: 'tutorials', component: TutorialListPage, meta: { title: "Tutorials" } },
 		{ path: '/tutorials/weather', name: 'weatherTutorial', component: WeatherTutorial, meta: { title: "Weather tutorial" } },
 		{ path: '/tutorials/movies', name: 'moviesTutorial', component: MoviesTutorial, meta: { title: "Movies tutorial" } },
 		{ path: '/tutorials/tvseries', name: 'tvSeriesTutorial', component: TvSeriesTutorial, meta: { title: "TV Series tutorial" } },
 		{ path: '/tutorials/earthquakes', name: 'EarthquakesTutorial', component: EarthquakesTutorial, meta: { title: "Earthquake tutorial" } },
-		{ path: '/tutorials/students', name: 'studentsTutorial', component: StudentsTutorial, meta: { title: "TV Series tutorial" } }
+		{ path: '/tutorials/students', name: 'studentsTutorial', component: StudentsTutorial, meta: { title: "TV Series tutorial" } },
+		{ path: '/tutorials/air', name: 'airTutorial', component: AirQualityPage, meta: { title: "Air Quality Tutorial" } },
 
+	// ------ Abstract tutorials
+		{ path: '/tutorials/js', name: 'jsTechniques', component: JavascriptTechniquesTutorial, meta: { title: "Javascript Techniques" } },
+		{ path: '/tutorials/geojson', name: 'geojsonTutorial', component: GeoJSONTutorial, meta: { title: "GeoJSON Tutorial" } }
 	],
 
 	linkActiveClass: "active",

@@ -1,5 +1,5 @@
 <template>
-	<div class="container" style="margin: 10px;">
+	<div class="container" style="padding: 10px;">
 		<h1>Table of Contents</h1>
 		<div v-html="tocHtml" style="margin-bottom: 50px;"></div>
 
@@ -393,23 +393,21 @@ google.setOnLoadCallback(function() {
 
 [//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen. Thanks SO - http://stackoverflow.com/questions/4823468/store-comments-in-markdown-syntax)
 
-   [gc]:<https://developers.google.com/chart/>
-   [tmdb]: <https://www.themoviedb.org/documentation/api>
-   [tmdb_tv]: <https://developers.themoviedb.org/3/tv/get-tv-details>
-   [tmdb_tv_s]: <https://developers.themoviedb.org/3/tv-seasons/get-tv-season-details>
-   [tmdb_tv_mp]: <https://developers.themoviedb.org/3/tv/get-popular-tv-shows>
-   [tmdb_tv_tr]: <https://developers.themoviedb.org/3/tv/get-top-rated-tv>
-   [gc_cc]: <https://developers.google.com/chart/interactive/docs/gallery/combochart>
-   [gc_sc]: <https://developers.google.com/chart/interactive/docs/gallery/scatterchart>
-   [gc_lc]: <https://developers.google.com/chart/interactive/docs/gallery/linechart>
-   [VueJS]: <https://vuejs.org/>
-   [node.js]: <http://nodejs.org>
-   [jQuery]: <http://jquery.com>
-   [Jetbrains]: <https://www.jetbrains.com/>
-   [gc_r]: <https://developers.google.com/chart/interactive/docs/reference>
-   [github]: <https://github.com/>
-
-
+	[gc]: https://developers.google.com/chart/
+	[tmdb]: https://www.themoviedb.org/documentation/api
+	[tmdb_tv]: https://developers.themoviedb.org/3/tv/get-tv-details
+	[tmdb_tv_s]: https://developers.themoviedb.org/3/tv-seasons/get-tv-season-details
+	[tmdb_tv_mp]: https://developers.themoviedb.org/3/tv/get-popular-tv-shows
+	[tmdb_tv_tr]: https://developers.themoviedb.org/3/tv/get-top-rated-tv
+	[gc_cc]: https://developers.google.com/chart/interactive/docs/gallery/combochart
+	[gc_sc]: https://developers.google.com/chart/interactive/docs/gallery/scatterchart
+	[gc_lc]: https://developers.google.com/chart/interactive/docs/gallery/linechart
+	[VueJS]: https://vuejs.org/
+	[node.js]: http://nodejs.org
+	[jQuery]: http://jquery.com
+	[Jetbrains]: https://www.jetbrains.com/
+	[gc_r]: https://developers.google.com/chart/interactive/docs/reference
+	[github]: https://github.com/
 </vue-markdown>
 	</div>
 </template>
@@ -424,10 +422,9 @@ google.setOnLoadCallback(function() {
 		tocHtml: string = "";
 		tocRenderered(tocHtml: string) {
 			this.tocHtml = tocHtml;
-        }
+		}
         
-        updated() {
-			console.log("updated!");
+		updated() {
 			Prism.highlightAll();
 		}
 	}

@@ -3,7 +3,24 @@
 		<div style="min-height:500px;">
 			<div class="row" style="height: auto;">
 				<div class="col-md-8 col-sm-12"> 
-					<h3>Map of Earthquakes</h3>
+					<div>
+						<h3 style="display: inline-block">Map of Earthquakes</h3>
+						<div class="dropdown pull-right" style="float:right;">
+							<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								Map Options
+							</button>
+							<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+								<div v-for="(value, key, index) in buttonList" :key="index">
+									<div class="dropdown-divider" v-if="index > 0"></div>
+									<h6 class="dropdown-header">{{key}}</h6>
+									
+									<a class="dropdown-item" href="#" 
+										v-for="(iv, ik, ii) in value" :key="ii" 
+										@click="setOptionsActiveItem(key, iv)" :class="{ 'active': mapOptions[key] == iv }">{{ik}}</a>
+								</div>
+							</div>
+						</div>
+					</div>
 					<div>
 						<!-- Map -->
 						<GmapMap :center="center" :zoom="zoom" style="height:500px;">
@@ -59,45 +76,6 @@
 					</button>
 				</div>
 			</h4>
-
-			<div class="row" style="width:100%;">
-				<div class="col-lg-4 col-xs-12">
-					<div class="card" style="height: 240px">
-						<div class="card-body">
-							<h4 class="card-title">Earthquake Information</h4>
-							<div><p>Earthquake Time: {{getFullDateString(selectedEarthquake.properties.time)}} </p></div>
-							<small><timeago :datetime="selectedEarthquake.properties.time" :auto-update="60"></timeago></small>
-						</div>
-					</div>
-				</div>
-
-				<div class="col-lg-4 col-xs-12">
-					<div class="card" style="height: 240px">
-						<div class="card-body">
-							<map-weather-information :weather="historicWeather" :title="strHistoricWeather" :map="self"></map-weather-information>
-						</div>
-					</div>
-				</div>
-
-				<div class="col-lg-4 col-xs-12">
-					<div class="card" style="height: 240px">
-						<div class="card-body">
-							<map-weather-information :weather="currentWeather" :title="strCurrentWeather" :map="self"></map-weather-information>
-						</div>
-					</div>
-				</div>
-			</div>
-			
-			<a :href="selectedEarthquake.properties.url">View more details at USGS.gov</a>
-		</div>
-
-		<div v-if="selectedEarthquake != null">
-			<div v-if="basicCountry != null && fullCountry != null" style="margin-top: 20px;">
-				<map-country-information :country="fullCountry" :basic="basicCountry"></map-country-information>
-			</div>
-			<div v-else>
-				<b style="padding-bottom: 50px;">We failed to load the information required to show country statistics</b>
-			</div>
 		</div>
 	</div>
 </template>
@@ -153,14 +131,28 @@
 			}
 		};
 
-		strCurrentWeather = "Current Weather";
-		strHistoricWeather = "Weather at time of Earthquake";
-		currentWeather: WeatherAPIResponse = null;
-		historicWeather: WeatherAPIResponse = null;
 		selectedEarthquake: Feature = null;
 
-		basicCountry: BasicCountryInformation = null;
-		fullCountry: CountryInformation = null;
+		buttonList = {
+			"Time Span": {
+				"Month": EQDateSpan.Month,
+				"Week": EQDateSpan.Week,
+				"Day": EQDateSpan.Day,
+				"Hour": EQDateSpan.Hour
+            },
+            "Earthquake Significance": {
+				"All": EQSignificance.ALL,
+				"Significant": EQSignificance.SIGNIFICANT,
+				"Mag 1+": EQSignificance.M1_0_PLUS,
+				"Mag 2.5+": EQSignificance.M2_5_PLUS,
+				"Mag 4.5+": EQSignificance.M4_5_PLUS,
+            }
+		};
+
+		mapOptions = {
+			"Time Span": EQDateSpan.Month,
+			"Earthquake Significance": EQSignificance.ALL
+		};
 
 		//
 		// ---------- Methods and Computed ----------
@@ -171,27 +163,46 @@
 			this.updateRecentEarthquakes();
 		 } // Initialize data here if you cant above
 
-		async mounted() {
-			this.geolocate();
 
+		/**
+		 * Load the earthquakes and place them into the marketrs array
+		 */
+		loadEarthquakesSelection() {
+			// Set $this so we can use it in the callback
 			let $this = this;
-			GetEarthQuakes(EQDateSpan.Week, EQSignificance.ALL, async function(response,status) {
+
+			// Reset our markers
+			this.markers = [];
+
+			// Get the new list of earthquakes using the options
+			GetEarthQuakes(this.mapOptions["Time Span"], this.mapOptions["Earthquake Significance"], async function(response,status) {
+				// EQDateSpan.Week, EQSignificance.ALL
+				
+				// If we failed to load the earthquakes
 				if (status != "success") {
 					console.warn("Failed to recieve information from geological API");
 					return;
 				}
-
+				
+				// For each earthquake in the response we want to loop it and make a marker for it and store it in the array
 				for (let x=0; x < response.features.length; x++) {
 					let eq: Feature = response.features[x];
 
+					// The marker just requires the lat and lng.
 					let marker = {
 						lat: eq.geometry['coordinates'][1],
 						lng: eq.geometry['coordinates'][0]
 					};
 
+					// Push the new marker into the array
 					$this.markers.push({ position: marker, label: eq.properties.mag.toString(), earthquake: eq });
 				}
 			});
+		}
+
+		async mounted() {
+			this.geolocate();
+			this.loadEarthquakesSelection();
 		} // On Component Load, use instead of constructor!
 
 		beforeUpdated() { } // Before Render
@@ -252,34 +263,26 @@
 			this[prop] = value;
 		}
 
-
 		loadEarthquakeData(earthquake: Feature){
 			let $this = this;
 
 			this.selectedEarthquake = earthquake;
+			// this.zoom = this.zoom < 12 ? this.zoom : 12;
 			this.zoom = 12;
 			this.center = {
 				lat: earthquake.geometry["coordinates"][1],
 				lng: earthquake.geometry["coordinates"][0]
 			};
 
+			// Popup url
+			let moreInfoUrl = `#/map/${this.center.lat}/${this.center.lng}/${earthquake.properties.time}`;
+
 			this.loadCountryInformation(earthquake);
 			this.infoWindow.Position = this.center;
 			this.infoWindow.Content = earthquake.properties.title + "<br><small>" 
-				+ new Date(earthquake.properties.time) + "</small>";
+				+ new Date(earthquake.properties.time) + "</small>" + 
+				'<br><a href="javascript:window.open(\'' + moreInfoUrl + '\',\'popup\', \'location,status,scrollbars,resizable,width=1200, height=800\')">View more information</a>';
 			this.infoWindow.Opened = true;
-
-			this.currentWeather = null;
-			GetCurrentWeather(this.center, (weather, status) => {
-				console.log("Current Weather: ", status, weather);
-				$this.currentWeather = weather;
-			});
-
-			$this.historicWeather = null;
-			GetHistoricWeather(this.center, new Date(earthquake.properties.time), (weather, status)=>{
-				console.log("Historic Weather: ", status, weather);
-				$this.historicWeather = weather;
-			});
 		}
 
 		getFullDateString(time: any): string {
@@ -294,15 +297,12 @@
 
 		loadCountryInformation(earthquake: Feature): void {
 			let $this = this;
-			this.basicCountry = null;
-			this.fullCountry = null;
 
 			// Geolocate the information
 			GetCountryFromLatLng({
 				lat: earthquake.geometry["coordinates"][1],
 				lng: earthquake.geometry["coordinates"][0]
 			}, (response, status) => {
-				$this.basicCountry = response;
 
 				// Country information
 				console.log("Basic country information", response, status);
@@ -314,14 +314,12 @@
 
 				// Get the advanced country information
 				GetCountryInformationFromCode(response.countryCode, (country,s) => {
-					$this.fullCountry = country;
-
 					console.log("Advanced country info", country);
 
 					$this.infoWindow.Content += "<br>";
 					$this.infoWindow.Content += `<b>${country.name}</b>`;
 
-					let wind = `<div style="float:left;"><img src="${country.flag}" width="100"></img></div><div style="margin: 5px; float:right;">` + $this.infoWindow.Content + "</div>";
+					let wind = `<div style="float:left;"><img src="${country.flag}" width="120"></img></div><div style="margin: 5px; float:right;">` + $this.infoWindow.Content + "</div>";
 					$this.infoWindow.Content = wind;
 				}, (er,ex) => {
 					alert("Failed to load advanced country information for country code: " + response.countryCode);
@@ -331,6 +329,13 @@
 				// Error handling
 				alert("Failed to get country for lat lng");
 			});
+		}
+
+		setOptionsActiveItem(type, data) {
+			this.mapOptions[type] = data;
+
+			// Reload the map 
+			this.loadEarthquakesSelection();
 		}
 	};
 </script>

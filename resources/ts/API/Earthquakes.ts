@@ -21,6 +21,9 @@ export enum EQSignificance {
     M1_0_PLUS = 4, 
 }
 
+/**
+ * Date span of the earthquakes
+ */
 export enum EQDateSpan {
     Hour  = "hour",
     Day   = "day",

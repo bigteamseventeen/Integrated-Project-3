@@ -1,5 +1,4 @@
 <html>
-
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -20,6 +19,12 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.6.0/prism.min.js"></script>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.6.0/themes/prism.min.css">
 	<link rel="stylesheet" href="https://unpkg.com/katex@0.6.0/dist/katex.min.css">
+
+	<style>
+	.nounderline {
+		text-decoration: none !important
+	}
+	</style>
 </head>
 
 <body>
@@ -41,5 +46,10 @@
 	<!-- Jquery libraries -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
 
+	<script>
+		if (window.location.protocol !== 'http:') {
+			window.location = 'http://' + window.location.hostname + window.location.pathname + window.location.hash;
+		}
+	</script>
 </body>
 </html>
