@@ -22,7 +22,7 @@
     "lodash": "latest",
     "node-sass": "^4.11.0",
     "npm-watch": "^0.6.0",
-    "pug": "^2.0.3",
+    "pug": "^3.0.1",
     "resolve-url-loader": "^2.3.1",
     "sass": "^1.17.0",
     "sass-loader": "^7.1.0",
