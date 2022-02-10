@@ -20,7 +20,7 @@
     "gmaps-marker-clusterer": "^1.2.2",
     "jquery": "^3.4.0",
     "lodash": "latest",
-    "node-sass": "^4.11.0",
+    "node-sass": "^7.0.0",
     "npm-watch": "^0.6.0",
     "pug": "^2.0.3",
     "resolve-url-loader": "^2.3.1",
