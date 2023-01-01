@@ -14,7 +14,7 @@
     "production": "node node_modules/cross-env/dist/bin/cross-env.js NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
   },
   "dependencies": {
-    "laravel-mix": "^4.0.14",
+    "laravel-mix": "^6.0.49",
     "bootstrap": "^4.3.1",
     "cross-env": "^5.2.0",
     "gmaps-marker-clusterer": "^1.2.2",
@@ -23,10 +23,10 @@
     "node-sass": "^4.11.0",
     "npm-watch": "^0.6.0",
     "pug": "^2.0.3",
-    "resolve-url-loader": "^2.3.1",
+    "resolve-url-loader": "^5.0.0",
     "sass": "^1.17.0",
-    "sass-loader": "^7.1.0",
-    "ts-loader": "^5.3.3",
+    "sass-loader": "^13.2.0",
+    "ts-loader": "^9.4.2",
     "typescript": "^3.3.3",
     "vue": "^2.6.6",
     "vue-class-component": "^6.3.2",
@@ -36,7 +36,7 @@
     "vue-template-compiler": "^2.6.6",
     "vue-timeago": "^5.0.0",
     "vue2-google-maps": "^0.10.6",
-    "webpack": "^4.30.0"
+    "webpack": "^5.75.0"
   },
   "devDependencies": {
     "@types/bootstrap": "^4.2.2",
@@ -46,6 +46,6 @@
     "@types/googlemaps": "^3.30.16",
     "@types/lodash": "^4.14.121",
     "@types/morris.js": "0.5.6",
-    "webpack-cli": "^3.3.1"
+    "webpack-cli": "^5.0.1"
   }
 }
